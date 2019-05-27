@@ -29,12 +29,12 @@ Reference:
 
 
 //Declaration
-void welcome_display();
+void Display_Welcome_Message();
 int difficulty_seletor();
-int control_board_creator(char control_board[BOARD_SIZE][BOARD_SIZE], int difficulty);
+int Initialize_Control_Board(char control_board[BOARD_SIZE][BOARD_SIZE], int difficulty);
 void showed_board_creator(char showed_board[BOARD_SIZE][BOARD_SIZE]);
 void board_printer(char board[BOARD_SIZE][BOARD_SIZE]);
-int player_input_and_board_update(char control_board[BOARD_SIZE][BOARD_SIZE],
+int Get_Board_Position_and_Board_Update(char control_board[BOARD_SIZE][BOARD_SIZE],
                                   char showed_board[BOARD_SIZE][BOARD_SIZE]);
 int mine_checker(char control_board[BOARD_SIZE][BOARD_SIZE], int row, int col);
 int game_status(char control_board[BOARD_SIZE][BOARD_SIZE], int status_code);
@@ -43,18 +43,18 @@ int game_status(char control_board[BOARD_SIZE][BOARD_SIZE], int status_code);
 //Main function
 int main() {
 
-    char control_board[BOARD_SIZE][BOARD_SIZE];
+	char control_board[BOARD_SIZE][BOARD_SIZE];
     char showed_board[BOARD_SIZE][BOARD_SIZE];
 
     int difficulty;
     int number_of_bombs;
     int status_code = KEEP_ON;
 
-    welcome_display();
+    Display_Welcome_Message();
 
     difficulty = difficulty_seletor();
 
-    number_of_bombs = control_board_creator(control_board, difficulty);
+    number_of_bombs = Initialize_Control_Board(control_board, difficulty);
 
     //Displays the amount of bombs generated on the table
     printf("\n\nThe board has %d bombs. Here we go!\n", number_of_bombs);
@@ -66,14 +66,14 @@ int main() {
 
         board_printer(showed_board);
 
-        status_code = player_input_and_board_update(control_board, showed_board);
+        status_code = Get_Board_Position_and_Board_Update(control_board, showed_board);
         status_code = game_status(control_board, status_code);
 
         if (status_code == REPLAY) {
 
             difficulty = difficulty_seletor();
 
-            number_of_bombs = control_board_creator(control_board, difficulty);
+            number_of_bombs = Initialize_Control_Board(control_board, difficulty);
             printf("\nThe board has %d bombs. Here we go again!\n", number_of_bombs);
 
             showed_board_creator(showed_board);
@@ -85,13 +85,13 @@ int main() {
 
 
 //Definition
-void welcome_display() {
+void Display_Welcome_Message() {
     /*
     Shows initial message
     */
 
-    printf("\n           _                                                   \n"
-           "          (_)                                                  \n"
+   printf("\n           _                                                   \n"
+           "\n          (_)                                                  \n"
            " _ __ ___  _ _ __   ___  _____      _____  ___ _ __   ___ _ __ \n"
            "| '_ ` _ \\| | '_ \\ / _ \\/ __\\ \\ /\\ / / _ \\/ _ \\ '_ \\ / _ \\ '__|\n"
            "| | | | | | | | | |  __/\\__ \\\\ V  V /  __/  __/ |_) |  __/ |   \n"
@@ -149,7 +149,7 @@ int difficulty_seletor() {
 }
 
 
-int control_board_creator(char control_board[BOARD_SIZE][BOARD_SIZE], int difficulty) {
+int Initialize_Control_Board(char control_board[BOARD_SIZE][BOARD_SIZE], int difficulty) {
     /*
     Uses the difficulty parameter to generate bombs on the board.
     This board won't be showed to the user until the game ends.
@@ -161,27 +161,26 @@ int control_board_creator(char control_board[BOARD_SIZE][BOARD_SIZE], int diffic
     srand((unsigned int) (&t));
 
     int counter = 0;
-    int aux3;
+    int random_number;
 
+    for (int row = 0; row < BOARD_SIZE; row++) {
 
-    for (int aux1 = 0; aux1 < BOARD_SIZE; aux1++) {
-
-        for(int aux2 = 0; aux2 < BOARD_SIZE; aux2++) {
+        for(int col = 0; col < BOARD_SIZE; col++) {
 
             //Random number range goes from 0 to 10
-            aux3 = rand() % 11;
+            random_number = rand() % 11;
 
             //Comparing the random number and difficulty parameter. Note that the chance of generating a bomb
             //becomes higher as the difficulty parameter becomes higher (it is set as 1, 3 or 6 now)
-            if (aux3 < difficulty) {
+            if (random_number < difficulty) {
 
-                control_board[aux1][aux2] = '*';
+                control_board[row][col] = '*';
                 counter ++;
             }
 
             else {
 
-                control_board[aux1][aux2] = 'o';
+                control_board[row][col] = 'o';
             }
         }
     }
@@ -231,7 +230,7 @@ void board_printer(char board[BOARD_SIZE][BOARD_SIZE]) {
 }
 
 
-int player_input_and_board_update(char control_board[BOARD_SIZE][BOARD_SIZE],
+int Get_Board_Position_and_Board_Update(char control_board[BOARD_SIZE][BOARD_SIZE],
         char showed_board[BOARD_SIZE][BOARD_SIZE]) {
     /*
     Receives player input for the coordinates. It calls mine_checker and, if the player didn't hit a bomb,
@@ -239,7 +238,7 @@ int player_input_and_board_update(char control_board[BOARD_SIZE][BOARD_SIZE],
     adjacent mines. Returns status_code
     */
 
-    int row ;
+    int row;
     int col;
     int mine_checker_feedback;
 
