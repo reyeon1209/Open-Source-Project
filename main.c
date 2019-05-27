@@ -20,7 +20,7 @@ Reference:
 //The game board can change by changing this defined constant
 #define BOARD_SIZE 6
 
-//Definitions for status_code, to improve code readability
+//Definitions for game_status, to improve code readability
 #define WIN (-10)
 #define LOSE (-20)
 #define KEEP_ON (-30)
@@ -32,12 +32,12 @@ Reference:
 void Display_Welcome_Message();
 int difficulty_seletor();
 int Initialize_Control_Board(char control_board[BOARD_SIZE][BOARD_SIZE], int difficulty);
-void showed_board_creator(char showed_board[BOARD_SIZE][BOARD_SIZE]);
+void Initialize_Showed_Board(char showed_board[BOARD_SIZE][BOARD_SIZE]);
 void board_printer(char board[BOARD_SIZE][BOARD_SIZE]);
 int Get_Board_Position_and_Board_Update(char control_board[BOARD_SIZE][BOARD_SIZE],
                                   char showed_board[BOARD_SIZE][BOARD_SIZE]);
 int mine_checker(char control_board[BOARD_SIZE][BOARD_SIZE], int row, int col);
-int game_status(char control_board[BOARD_SIZE][BOARD_SIZE], int status_code);
+int Get_Game_Status(char control_board[BOARD_SIZE][BOARD_SIZE], int game_status);
 
 
 //Main function
@@ -48,7 +48,7 @@ int main() {
 
     int difficulty;
     int number_of_bombs;
-    int status_code = KEEP_ON;
+    int game_status = KEEP_ON;
 
     Display_Welcome_Message();
 
@@ -59,24 +59,24 @@ int main() {
     //Displays the amount of bombs generated on the table
     printf("\n\nThe board has %d bombs. Here we go!\n", number_of_bombs);
 
-    showed_board_creator(showed_board);
+    Initialize_Showed_Board(showed_board);
 
     //Loop that keeps the game going
-    while (status_code == KEEP_ON || status_code == REPLAY) {
+    while (game_status == KEEP_ON || game_status == REPLAY) {
 
         board_printer(showed_board);
 
-        status_code = Get_Board_Position_and_Board_Update(control_board, showed_board);
-        status_code = game_status(control_board, status_code);
+        game_status = Get_Board_Position_and_Board_Update(control_board, showed_board);
+        game_status = Get_Game_Status(control_board, game_status);
 
-        if (status_code == REPLAY) {
+        if (game_status == REPLAY) {
 
             difficulty = difficulty_seletor();
 
             number_of_bombs = Initialize_Control_Board(control_board, difficulty);
             printf("\nThe board has %d bombs. Here we go again!\n", number_of_bombs);
 
-            showed_board_creator(showed_board);
+            Initialize_Showed_Board(showed_board);
         }
     }
 
@@ -189,16 +189,16 @@ int Initialize_Control_Board(char control_board[BOARD_SIZE][BOARD_SIZE], int dif
 }
 
 
-void showed_board_creator(char showed_board[BOARD_SIZE][BOARD_SIZE]) {
+void Initialize_Showed_Board(char showed_board[BOARD_SIZE][BOARD_SIZE]) {
     /*
     Assigns 'X' for the whole showed_board
     */
 
-    for (int aux1 = 0; aux1 < BOARD_SIZE; aux1++) {
+    for (int row = 0; row < BOARD_SIZE; row++) {
 
-        for (int aux2 = 0; aux2 < BOARD_SIZE; aux2++) {
+        for (int col = 0; col < BOARD_SIZE; col++) {
 
-            showed_board[aux1][aux2] = 'X';
+            showed_board[row][col] = 'X';
         }
     }
 }
@@ -235,7 +235,7 @@ int Get_Board_Position_and_Board_Update(char control_board[BOARD_SIZE][BOARD_SIZ
     /*
     Receives player input for the coordinates. It calls mine_checker and, if the player didn't hit a bomb,
     it updates both control_board (switching 'o' for 'x') and showed_board (switching 'o' for the number of
-    adjacent mines. Returns status_code
+    adjacent mines. Returns game_status
     */
 
     int row;
@@ -452,16 +452,16 @@ int mine_checker(char control_board[BOARD_SIZE][BOARD_SIZE], int row, int col) {
 }
 
 
-int game_status(char control_board[BOARD_SIZE][BOARD_SIZE], int status_code) {
+int Get_Game_Status(char control_board[BOARD_SIZE][BOARD_SIZE], int game_status) {
     /*
     Receives the status code. For WIN and LOSE, it calls board_printer to show control_board and asks user
     about replaying or not, returning the appropriate defined code. For KEEP_ON,
-    it just returns the same status_code so the game loop continues
+    it just returns the same game_status so the game loop continues
     */
 
     char input;
 
-    if (status_code == WIN) {
+    if (game_status == WIN) {
 
         printf("\n\nYou did it! You cleared the board. Congratulations!!!\n\n");
 
@@ -493,7 +493,7 @@ int game_status(char control_board[BOARD_SIZE][BOARD_SIZE], int status_code) {
         } while (input != 'y' && input != 'n');
     }
 
-    else if (status_code == LOSE) {
+    else if (game_status == LOSE) {
 
         printf("\n\nOh no! You hit a mine! ¯\\_(ツ)_/¯ \n\n");
 
