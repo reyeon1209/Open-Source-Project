@@ -111,7 +111,7 @@ int difficulty_seletor() {
 
     char input[10];
     int difficulty = 0;
-    int aux;
+    int compare_result;
 
     //Used for input string comparison
     char easy[10] = "easy";
@@ -124,26 +124,26 @@ int difficulty_seletor() {
         printf("\nEnter the difficulty (easy, normal, hard): ");
         scanf(" %s", input);
 
-        aux = strcmp(input, easy);
+        compare_result = strcmp(input, easy);
         difficulty = 1;
 
-        if (aux != 0) {
+        if (compare_result != 0) {
 
-            aux = strcmp(input, normal);
+            compare_result = strcmp(input, normal);
             difficulty = 3;
 
-            if (aux != 0) {
+            if (compare_result != 0) {
 
-                aux = strcmp(input, hard);
+                compare_result = strcmp(input, hard);
                 difficulty = 6;
 
-                if (aux != 0) {
+                if (compare_result != 0) {
 
                     printf("\nError with the input. Try again...\n");
                 }
             }
         }
-    } while (aux != 0);
+    } while (compare_result != 0);
 
     return difficulty;
 }
@@ -211,21 +211,21 @@ void board_printer(char board[BOARD_SIZE][BOARD_SIZE]) {
 
     printf("\n");
 
-    for (int aux1 = 0; aux1 < BOARD_SIZE; aux1++) {
+    for (int col = 0; col < BOARD_SIZE; col++) {
 
-        printf("c%d ", aux1);
+        printf("c%d ", col);
     }
 
     printf("\n\n");
 
-    for (int aux3 = 0; aux3 < BOARD_SIZE; aux3++) {
+    for (int row = 0; row < BOARD_SIZE; row++) {
 
-        for (int aux4 = 0; aux4 < BOARD_SIZE; aux4++) {
+        for (int col = 0; col < BOARD_SIZE; col++) {
 
-            printf(" %c ", board[aux3][aux4]);
+            printf(" %c ", board[row][col]);
         }
 
-        printf("     r%d\n", aux3);
+        printf("     r%d\n", row);
     }
 }
 
