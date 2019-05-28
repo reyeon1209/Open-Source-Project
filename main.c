@@ -16,6 +16,7 @@ Reference:
 #include <stdlib.h>
 #include <math.h>
 #include "print.h"
+#include "game_setting.h"
 
 
 //The game board can change by changing this defined constant
@@ -38,7 +39,6 @@ typedef struct Point {
 //Declaration
 void Init_Game(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOARD_SIZE][BOARD_SIZE]);
 int Select_Difficulty();
-int Initialize_Control_Board(char control_board[BOARD_SIZE][BOARD_SIZE], int difficulty);
 void Initialize_Showed_Board(char showed_board[BOARD_SIZE][BOARD_SIZE]);
 void Print_Board(char board[BOARD_SIZE][BOARD_SIZE]);
 Point Get_Board_Position();
@@ -141,47 +141,6 @@ int Select_Difficulty() {
 
     return difficulty;
 }
-
-
-int Initialize_Control_Board(char control_board[BOARD_SIZE][BOARD_SIZE], int difficulty) {
-    /*
-    Uses the difficulty parameter to generate bombs on the board.
-    This board won't be showed to the user until the game ends.
-    Empty spaces are 'o', bombs are '*'. The function returns the number of bombs on the board
-    */
-
-    //Using time as seed
-    time_t t;
-    srand((unsigned int) (&t));
-
-    int counter = 0;
-    int random_number;
-
-    for (int row = 0; row < BOARD_SIZE; row++) {
-
-        for(int col = 0; col < BOARD_SIZE; col++) {
-
-            //Random number range goes from 0 to 10
-            random_number = rand() % 11;
-
-            //Comparing the random number and difficulty parameter. Note that the chance of generating a bomb
-            //becomes higher as the difficulty parameter becomes higher (it is set as 1, 3 or 6 now)
-            if (random_number < difficulty) {
-
-                control_board[row][col] = '*';
-                counter ++;
-            }
-
-            else {
-
-                control_board[row][col] = 'o';
-            }
-        }
-    }
-
-    return counter;
-}
-
 
 void Initialize_Showed_Board(char showed_board[BOARD_SIZE][BOARD_SIZE]) {
     /*
