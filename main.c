@@ -30,14 +30,19 @@ Reference:
 #define REPLAY (-40)
 #define GAME_OVER (-50)
 
+typedef struct Point {
+	int row;
+	int col;
+}Point;
 
 //Declaration
 int Select_Difficulty();
 int Initialize_Control_Board(char control_board[BOARD_SIZE][BOARD_SIZE], int difficulty);
 void Initialize_Showed_Board(char showed_board[BOARD_SIZE][BOARD_SIZE]);
 void Print_Board(char board[BOARD_SIZE][BOARD_SIZE]);
-int Get_Board_Position_and_Board_Update(char control_board[BOARD_SIZE][BOARD_SIZE],
-                                  char showed_board[BOARD_SIZE][BOARD_SIZE]);
+Point Get_Board_Position();
+int Board_Update(char control_board[BOARD_SIZE][BOARD_SIZE],
+                                  char showed_board[BOARD_SIZE][BOARD_SIZE], Point pos);
 int Get_Around_Mine_Number(char control_board[BOARD_SIZE][BOARD_SIZE], int row, int col);
 int Get_Game_Status(char control_board[BOARD_SIZE][BOARD_SIZE], int game_status);
 
@@ -51,11 +56,12 @@ int main() {
     int difficulty;
     int number_of_bombs;
     int game_status = START;
+	Point pos;
 
     Display_Welcome_Message();
 
     //Loop that keeps the game going
-    while (game_status == START || game_status == KEEP_ON || game_status == REPLA0Y) {
+    while (game_status == START || game_status == KEEP_ON || game_status == REPLAY) {
 		if (game_status == START || game_status == REPLAY) {
             difficulty = Select_Difficulty();
 
@@ -67,7 +73,8 @@ int main() {
 
 		Print_Board(showed_board);
 		
-		game_status = Get_Board_Position_and_Board_Update(control_board, showed_board);
+		pos = Get_Board_Position();
+		game_status = Board_Update(control_board, showed_board, pos);
 		game_status = Get_Game_Status(control_board, game_status);
     }
 
@@ -205,34 +212,39 @@ void Print_Board(char board[BOARD_SIZE][BOARD_SIZE]) {
 }
 
 
-int Get_Board_Position_and_Board_Update(char control_board[BOARD_SIZE][BOARD_SIZE],
-        char showed_board[BOARD_SIZE][BOARD_SIZE]) {
+Point Get_Board_Position() {
     /*
     Receives player input for the coordinates. It calls mine_checker and, if the player didn't hit a bomb,
     it updates both control_board (switching 'o' for 'x') and showed_board (switching 'o' for the number of
     adjacent mines. Returns game_status
     */
 
-    int row;
-    int col;
-    int mine_checker_feedback;
+    Point pos;
 
     //User input
     do {
 
         printf("\n\nSelect a row: ");
-        scanf(" %d", &row);
+        scanf(" %d", &pos.row);
         printf("Select a collumn: ");
-        scanf(" %d", &col);
+        scanf(" %d", &pos.col);
 
-        if (row >= BOARD_SIZE || col >= BOARD_SIZE) {
+        if (pos.row >= BOARD_SIZE || pos.col >= BOARD_SIZE) {
 
             printf("\n\nValue too big. Should go from 0 to %d. Try again", BOARD_SIZE);
         }
-    } while (row >= BOARD_SIZE && col >= BOARD_SIZE);
 
-    //mine_checker function call
-    mine_checker_feedback = Get_Around_Mine_Number(control_board, row, col);
+    } while (pos.row >= BOARD_SIZE && pos.col >= BOARD_SIZE);
+
+	return pos;
+}
+
+ int Board_Update(char control_board[BOARD_SIZE][BOARD_SIZE],
+                                  char showed_board[BOARD_SIZE][BOARD_SIZE], Point pos) {
+	int mine_checker_feedback;
+
+	//mine_checker function call
+    mine_checker_feedback = Get_Around_Mine_Number(control_board, pos.row, pos.col);
 
     if (mine_checker_feedback == -1) {
 
@@ -242,10 +254,10 @@ int Get_Board_Position_and_Board_Update(char control_board[BOARD_SIZE][BOARD_SIZ
     //Both boards are updated here
     else {
 
-        control_board[row][col] = 'x';
+        control_board[pos.row][pos.col] = 'x';
         
         //Using ASCII table to properly cast char type to integer;
-        showed_board[row][col] = (char) (mine_checker_feedback + 48);
+        showed_board[pos.row][pos.col] = (char) (mine_checker_feedback + 48);
 
         return KEEP_ON;
     }
