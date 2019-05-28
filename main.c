@@ -178,6 +178,12 @@ int Get_Around_Mine_Number(char control_board[BOARD_SIZE][BOARD_SIZE], Point pos
 	*/
 
     int number_of_bomb = 0;
+	int start_row_index = -1;
+	int end_row_index = 1;
+	int start_col_index = -1;
+	int end_col_index = 1;
+	int row_index = 0;
+	int col_index = 0;
 
     if (control_board[pos.row][pos.col] == '*') {
 
@@ -185,19 +191,13 @@ int Get_Around_Mine_Number(char control_board[BOARD_SIZE][BOARD_SIZE], Point pos
     }
 
     else {
-
-		int start_row_index = -1;
-		int end_row_index = 1;
-		int start_col_index = -1;
-		int end_col_index = 1;
-		
 		if( pos.row == 0 ) start_row_index = 0;
 		if( pos.col == 0 ) start_col_index = 0;
 		if( pos.row == BOARD_SIZE - 1) end_row_index = 0;
 		if( pos.col == BOARD_SIZE - 1) end_col_index = 0;
 
-		for(int row_index = start_row_index; row_index <= end_row_index; row_index++){
-			for(int col_index = start_col_index; col_index <= end_col_index; col_index++){
+		for(row_index = start_row_index; row_index <= end_row_index; row_index++){
+			for(col_index = start_col_index; col_index <= end_col_index; col_index++){
 				if (control_board[pos.row+row_index][pos.col+col_index] == '*')
 					number_of_bomb ++;
 			}

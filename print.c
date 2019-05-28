@@ -23,23 +23,22 @@ void Print_Board(char board[BOARD_SIZE][BOARD_SIZE]) {
     /*
     Prints the parameter array in a user friendly way
     */
+	int col;
+	int row;
 
     printf("\n");
 
-    for (int col = 0; col < BOARD_SIZE; col++) {
-
+    for (col = 0; col < BOARD_SIZE; col++) {
         printf("c%d ", col);
     }
 
     printf("\n\n");
 
-    for (int row = 0; row < BOARD_SIZE; row++) {
-
-        for (int col = 0; col < BOARD_SIZE; col++) {
-
+    for (row = 0; row < BOARD_SIZE; row++) {
+        for (col = 0; col < BOARD_SIZE; col++) {
             printf(" %c ", board[row][col]);
-        }
-
+		}
         printf("     r%d\n", row);
     }
+
 }
