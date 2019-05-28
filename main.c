@@ -192,11 +192,10 @@ Point Get_Board_Position() {
     adjacent mines. Returns game_status
     */
 
-    Point pos;
+	Point pos;
 
     //User input
-    do {
-
+    while (1) {
         printf("\n\nSelect a row: ");
         scanf(" %d", &pos.row);
         printf("Select a collumn: ");
@@ -205,9 +204,12 @@ Point Get_Board_Position() {
         if (pos.row >= BOARD_SIZE || pos.col >= BOARD_SIZE) {
 
             printf("\n\nValue too big. Should go from 0 to %d. Try again", BOARD_SIZE);
+			continue;
         }
 
-    } while (pos.row >= BOARD_SIZE && pos.col >= BOARD_SIZE);
+		else
+			return pos;
+    }
 
 	return pos;
 }
