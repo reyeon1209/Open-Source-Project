@@ -216,10 +216,8 @@ Point Get_Board_Position() {
 
  int Board_Update(char control_board[BOARD_SIZE][BOARD_SIZE],
                                   char showed_board[BOARD_SIZE][BOARD_SIZE], Point pos) {
-	int mine_checker_feedback;
-
 	//mine_checker function call
-    mine_checker_feedback = Get_Around_Mine_Number(control_board, pos);
+    int mine_checker_feedback = Get_Around_Mine_Number(control_board, pos);
 
     if (mine_checker_feedback == -1) {
 
