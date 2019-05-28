@@ -15,6 +15,7 @@ Reference:
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
+#include "message.h"
 
 
 //The game board can change by changing this defined constant
@@ -29,7 +30,6 @@ Reference:
 
 
 //Declaration
-void Display_Welcome_Message();
 int Select_Difficulty();
 int Initialize_Control_Board(char control_board[BOARD_SIZE][BOARD_SIZE], int difficulty);
 void Initialize_Showed_Board(char showed_board[BOARD_SIZE][BOARD_SIZE]);
@@ -85,24 +85,6 @@ int main() {
 
 
 //Definition
-void Display_Welcome_Message() {
-    /*
-    Shows initial message
-    */
-
-   printf("\n           _                                                   \n"
-           "\n          (_)                                                  \n"
-           " _ __ ___  _ _ __   ___  _____      _____  ___ _ __   ___ _ __ \n"
-           "| '_ ` _ \\| | '_ \\ / _ \\/ __\\ \\ /\\ / / _ \\/ _ \\ '_ \\ / _ \\ '__|\n"
-           "| | | | | | | | | |  __/\\__ \\\\ V  V /  __/  __/ |_) |  __/ |   \n"
-           "|_| |_| |_|_|_| |_|\\___||___/ \\_/\\_/ \\___|\\___| .__/ \\___|_|   \n"
-           "                                              | |              \n"
-           "                                              |_|              \n\n");
-
-    printf("Welcome to Minesweeper. Fork me at: https://github.com/apieceofCAKE/minesweeper_game\n");
-}
-
-
 int Select_Difficulty() {
     /*
     Receives user input and returns an integer that will affect bomb placing probability.
