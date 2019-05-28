@@ -1,5 +1,7 @@
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
+#include <math.h>
 #include "game_setting.h"
 
 //The game board can change by changing this defined constant
@@ -43,4 +45,51 @@ int Initialize_Control_Board(char control_board[BOARD_SIZE][BOARD_SIZE], int dif
     }
 
     return counter;
+}
+
+
+
+int Select_Difficulty() {
+    /*
+    Receives user input and returns an integer that will affect bomb placing probability.
+    The higher this integer, higher the difficulty
+    */
+
+    char input[10];
+    int difficulty = 0;
+    int compare_result;
+
+    //Used for input string comparison
+    char easy[10] = "easy";
+    char normal[10] = "normal";
+    char hard[10] = "hard";
+
+    //Dealing with input and assigning value to 'difficulty' variable
+    do {
+
+        printf("\nEnter the difficulty (easy, normal, hard): ");
+        scanf(" %s", input);
+
+        compare_result = strcmp(input, easy);
+        difficulty = 1;
+
+        if (compare_result != 0) {
+
+            compare_result = strcmp(input, normal);
+            difficulty = 3;
+
+            if (compare_result != 0) {
+
+                compare_result = strcmp(input, hard);
+                difficulty = 6;
+
+                if (compare_result != 0) {
+
+                    printf("\nError with the input. Try again...\n");
+                }
+            }
+        }
+    } while (compare_result != 0);
+
+    return difficulty;
 }

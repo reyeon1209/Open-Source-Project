@@ -38,9 +38,7 @@ typedef struct Point {
 
 //Declaration
 void Init_Game(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOARD_SIZE][BOARD_SIZE]);
-int Select_Difficulty();
 void Initialize_Showed_Board(char showed_board[BOARD_SIZE][BOARD_SIZE]);
-void Print_Board(char board[BOARD_SIZE][BOARD_SIZE]);
 Point Get_Board_Position();
 int Board_Update(char control_board[BOARD_SIZE][BOARD_SIZE],
                                   char showed_board[BOARD_SIZE][BOARD_SIZE], Point pos);
@@ -97,51 +95,6 @@ void Init_Game(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOA
 }
 
 
-int Select_Difficulty() {
-    /*
-    Receives user input and returns an integer that will affect bomb placing probability.
-    The higher this integer, higher the difficulty
-    */
-
-    char input[10];
-    int difficulty = 0;
-    int compare_result;
-
-    //Used for input string comparison
-    char easy[10] = "easy";
-    char normal[10] = "normal";
-    char hard[10] = "hard";
-
-    //Dealing with input and assigning value to 'difficulty' variable
-    do {
-
-        printf("\nEnter the difficulty (easy, normal, hard): ");
-        scanf(" %s", input);
-
-        compare_result = strcmp(input, easy);
-        difficulty = 1;
-
-        if (compare_result != 0) {
-
-            compare_result = strcmp(input, normal);
-            difficulty = 3;
-
-            if (compare_result != 0) {
-
-                compare_result = strcmp(input, hard);
-                difficulty = 6;
-
-                if (compare_result != 0) {
-
-                    printf("\nError with the input. Try again...\n");
-                }
-            }
-        }
-    } while (compare_result != 0);
-
-    return difficulty;
-}
-
 void Initialize_Showed_Board(char showed_board[BOARD_SIZE][BOARD_SIZE]) {
     /*
     Assigns 'X' for the whole showed_board
@@ -159,30 +112,6 @@ void Initialize_Showed_Board(char showed_board[BOARD_SIZE][BOARD_SIZE]) {
 }
 
 
-void Print_Board(char board[BOARD_SIZE][BOARD_SIZE]) {
-    /*
-    Prints the parameter array in a user friendly way
-    */
-
-    printf("\n");
-
-    for (int col = 0; col < BOARD_SIZE; col++) {
-
-        printf("c%d ", col);
-    }
-
-    printf("\n\n");
-
-    for (int row = 0; row < BOARD_SIZE; row++) {
-
-        for (int col = 0; col < BOARD_SIZE; col++) {
-
-            printf(" %c ", board[row][col]);
-        }
-
-        printf("     r%d\n", row);
-    }
-}
 
 
 Point Get_Board_Position() {
