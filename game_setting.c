@@ -18,10 +18,11 @@ int Initialize_Control_Board(char control_board[BOARD_SIZE][BOARD_SIZE], int dif
 
     int counter = 0;
     int random_number;
+	int row, col;
 
-    for (int row = 0; row < BOARD_SIZE; row++) {
+    for (row = 0; row < BOARD_SIZE; row++) {
 
-        for(int col = 0; col < BOARD_SIZE; col++) {
+        for(col = 0; col < BOARD_SIZE; col++) {
 
             //Random number range goes from 0 to 10
             random_number = rand() % 11;
