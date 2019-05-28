@@ -57,7 +57,7 @@ int Select_Difficulty() {
 
     char input[10];
     int difficulty = 0;
-    int compare_result;
+    int compare_result = 1;
 
     //Used for input string comparison
     char easy[10] = "easy";
@@ -65,7 +65,7 @@ int Select_Difficulty() {
     char hard[10] = "hard";
 
     //Dealing with input and assigning value to 'difficulty' variable
-    do {
+    while (compare_result != 0) {
 
         printf("\nEnter the difficulty (easy, normal, hard): ");
         scanf(" %s", input);
@@ -89,7 +89,7 @@ int Select_Difficulty() {
                 }
             }
         }
-    } while (compare_result != 0);
+    } 
 
     return difficulty;
 }
