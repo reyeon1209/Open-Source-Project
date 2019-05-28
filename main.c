@@ -37,11 +37,14 @@ typedef struct Point {
 }Point;
 
 //Declaration
+void Init_Game(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOARD_SIZE][BOARD_SIZE]);
+void Initialize_Showed_Board(char showed_board[BOARD_SIZE][BOARD_SIZE]);
 Point Get_Board_Position();
 int Board_Update(char control_board[BOARD_SIZE][BOARD_SIZE],
                                   char showed_board[BOARD_SIZE][BOARD_SIZE], Point pos);
 int Get_Around_Mine_Number(char control_board[BOARD_SIZE][BOARD_SIZE], Point pos);
 int Get_Game_Status(char control_board[BOARD_SIZE][BOARD_SIZE], int game_status);
+int Input_Replay_Game(char control_board[BOARD_SIZE][BOARD_SIZE]);
 
 
 //Main function
@@ -73,6 +76,44 @@ int main() {
 
 
 //Definition
+void Init_Game(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOARD_SIZE][BOARD_SIZE]) {
+	/*
+	 *@brief   게임의 난이도, 폭탄 수, 게임판 등을 초기화 하는 함수
+	 *@param   control_board[][] : 사용자에게 보이지 않는 게임판
+	 *		   showed_board[][] : 사용자에게 보이는 게임판
+	 */
+	
+	int difficulty;
+	int number_of_bombs;
+
+	difficulty = Select_Difficulty();
+
+    number_of_bombs = Initialize_Control_Board(control_board, difficulty);
+    printf("\nThe board has %d bombs. Here we go again!\n", number_of_bombs);
+
+    Initialize_Showed_Board(showed_board);
+}
+
+
+void Initialize_Showed_Board(char showed_board[BOARD_SIZE][BOARD_SIZE]) {
+    /*
+    Assigns 'X' for the whole showed_board
+    */
+	/*
+	 *@brief   showed_board[][]를 모두 'X'로 초기화 ('X'는 지뢰를 검사하기 전 상태)
+	 *@param   showed_board[][] : 사용자가 볼 수 있는 게임판
+	 */
+
+    for (int row = 0; row < BOARD_SIZE; row++) {
+        for (int col = 0; col < BOARD_SIZE; col++) {
+            showed_board[row][col] = 'X';
+        }
+    }
+}
+
+
+
+
 Point Get_Board_Position() {
     /*
     Receives player input for the coordinates. It calls mine_checker and, if the player didn't hit a bomb,
@@ -199,4 +240,40 @@ int Get_Game_Status(char control_board[BOARD_SIZE][BOARD_SIZE], int game_status)
 		return next_status;
 
 	return next_status;
+}
+
+
+int Input_Replay_Game(char control_board[BOARD_SIZE][BOARD_SIZE]) {
+	/*
+	 *@brief   사용자에게 게임을 다시 할지 입력받는 함수
+	 *@param   control_board[][] : 사용자에게 보이지 않는 게임판
+	 *		   input : 게임을 다시할 지 사용자의 입력을 받는 변수
+	 *@return   사용자의 입력이 y일 경우 REPLAY, 사용자의 입력이 n일 경우 GAMEOVER
+	 *			(REPLAY, GAMEOVER는 game_status가 가질 상수)
+	 */
+
+	char input;	
+
+	Print_Board(control_board);
+
+	do {
+            printf("\nDo you want to play again (y/n)? ");
+            scanf(" %c", &input);
+            printf("\n\n");
+
+            if (input == 'y') {
+
+                return REPLAY;
+            }
+            else if (input == 'n') {
+                printf("Thanks for playing!\n\n");
+
+                return GAME_OVER;
+            }
+            else {
+                printf("Wrong input. Try again...");
+            }
+        } while (input != 'y' && input != 'n');
+
+	return GAME_OVER;
 }
