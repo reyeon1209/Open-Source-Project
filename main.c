@@ -22,6 +22,8 @@ Reference:
 #define BOARD_SIZE 6
 
 //Definitions for game_status, to improve code readability
+// @brief 게임 상태를 나타내는 상수이다. 상수의 값에는 의미가 없다.
+#define START (0)	
 #define WIN (-10)
 #define LOSE (-20)
 #define KEEP_ON (-30)
@@ -48,29 +50,13 @@ int main() {
 
     int difficulty;
     int number_of_bombs;
-    int game_status = KEEP_ON;
+    int game_status = START;
 
     Display_Welcome_Message();
 
-    difficulty = Select_Difficulty();
-
-    number_of_bombs = Initialize_Control_Board(control_board, difficulty);
-
-    //Displays the amount of bombs generated on the table
-    printf("\n\nThe board has %d bombs. Here we go!\n", number_of_bombs);
-
-    Initialize_Showed_Board(showed_board);
-
     //Loop that keeps the game going
-    while (game_status == KEEP_ON || game_status == REPLAY) {
-
-        Print_Board(showed_board);
-
-        game_status = Get_Board_Position_and_Board_Update(control_board, showed_board);
-        game_status = Get_Game_Status(control_board, game_status);
-
-        if (game_status == REPLAY) {
-
+    while (game_status == START || game_status == KEEP_ON || game_status == REPLA0Y) {
+		if (game_status == START || game_status == REPLAY) {
             difficulty = Select_Difficulty();
 
             number_of_bombs = Initialize_Control_Board(control_board, difficulty);
@@ -78,6 +64,11 @@ int main() {
 
             Initialize_Showed_Board(showed_board);
         }
+
+		Print_Board(showed_board);
+		
+		game_status = Get_Board_Position_and_Board_Update(control_board, showed_board);
+		game_status = Get_Game_Status(control_board, game_status);
     }
 
     return 0;
@@ -175,11 +166,13 @@ void Initialize_Showed_Board(char showed_board[BOARD_SIZE][BOARD_SIZE]) {
     /*
     Assigns 'X' for the whole showed_board
     */
+	/*
+	 *@brief   showed_board[][]를 모두 'X'로 초기화 ('X'는 지뢰를 검사하기 전 상태)
+	 *@param   showed_board[][] : 사용자가 볼 수 있는 게임판
+	 */
 
     for (int row = 0; row < BOARD_SIZE; row++) {
-
         for (int col = 0; col < BOARD_SIZE; col++) {
-
             showed_board[row][col] = 'X';
         }
     }
@@ -302,25 +295,36 @@ int Get_Around_Mine_Number(char control_board[BOARD_SIZE][BOARD_SIZE], int row, 
 }
 
 
-
 int Get_Game_Status(char control_board[BOARD_SIZE][BOARD_SIZE], int game_status) {
     /*
     Receives the status code. For WIN and LOSE, it calls board_printer to show control_board and asks user
     about replaying or not, returning the appropriate defined code. For KEEP_ON,
     it just returns the same game_status so the game loop continues
     */
+	/*
+	 *@brief   게임 상태가 WIN이나 LOSE일 경우 사용자에게 게임을 다시할 지 입력 받는다.
+	 *@param   control_board[][] : 사용자에게 보이지 않는 게임판
+	 *		   game_status : 게임의 상태
+	 *		   input : 게임을 다시할 지를 입력받는 변수
+	 *@return   사용자의 입력이 y일 경우 REPLAY, 사용자의 입력이 n일 경우 GAMEOVER,
+	 *			게임 상태가 WIN이나 LOSE가 아닐 경우 KEEP_ON
+	 *			(REPLAY, GAMEOVER, KEEP_ON은 game_status가 가질 상수)
+	 */
 
     char input;
 
-    if (game_status == WIN) {
-
+	if (game_status == WIN) {
         printf("\n\nYou did it! You cleared the board. Congratulations!!!\n\n");
+	}
+	else if (game_status == LOSE) {
+		printf("\n\nOh no! You hit a mine! ¯\\_(ツ)_/¯ \n\n");
+	}
 
-        Print_Board(control_board);
+	if (game_status == WIN || game_status == LOSE){
+		Print_Board(control_board);
 
-        //User input
+		//User input
         do {
-
             printf("\nDo you want to play again (y/n)? ");
             scanf(" %c", &input);
             printf("\n\n");
@@ -329,48 +333,19 @@ int Get_Game_Status(char control_board[BOARD_SIZE][BOARD_SIZE], int game_status)
 
                 return REPLAY;
             }
-
             else if (input == 'n') {
-
                 printf("Thanks for playing!\n\n");
 
                 return GAME_OVER;
             }
-
             else {
 
                 printf("Wrong input. Try again...");
             }
         } while (input != 'y' && input != 'n');
-    }
+	}
+	else
+		return KEEP_ON;
 
-    else if (game_status == LOSE) {
-
-        printf("\n\nOh no! You hit a mine! ¯\\_(ツ)_/¯ \n\n");
-
-        Print_Board(control_board);
-
-        //User input
-        do {
-
-            printf("\nDo you want to play again (y/n)? ");
-            scanf(" %c", &input);
-            printf("\n\n");
-
-            if (input == 'y') {
-
-                return REPLAY;
-            }
-
-            else if (input == 'n') {
-
-                printf("Thanks for playing!\n\n");
-
-                return GAME_OVER;
-            }
-        } while (input != 'y' && input != 'n');
-    }
-
-    else
-        return KEEP_ON;
+	return KEEP_ON;
 }
