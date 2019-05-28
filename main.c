@@ -265,6 +265,11 @@ int Get_Around_Mine_Number(char control_board[BOARD_SIZE][BOARD_SIZE], int row, 
     Otherwise, checks control_board for the number adjacent mines and returns it
     */
 
+	/*
+	* @params control_board : 지뢰가 저장된 보드, row : 사용자가 선택한 보드 행, col : 사용자가 선택한 보드 열
+	* @return 사용자가 선택한 보드 위치에 지뢰가 있다면 -1 리턴, 그렇지 않다면 주변 폭탄 개수 리턴
+	*/
+
     int number_of_bomb = 0;
 
     if (control_board[row][col] == '*') {
@@ -274,164 +279,28 @@ int Get_Around_Mine_Number(char control_board[BOARD_SIZE][BOARD_SIZE], int row, 
 
     else {
 
-        //Treating all cases for adjacent bombs scanning
+		int start_row_index = -1;
+		int end_row_index = 1;
+		int start_col_index = -1;
+		int end_col_index = 1;
+		
+		if( row == 0 ) start_row_index = 0;
+		if( col == 0 ) start_col_index = 0;
+		if( row == BOARD_SIZE - 1) end_row_index = 0;
+		if( col == BOARD_SIZE - 1) end_col_index = 0;
 
-        //Position is in the 'middle' of the board. 8 adjacent blocks can be scanned
-        if ((row >= 1 && row < (BOARD_SIZE - 1)) && (col >= 1 && col < (BOARD_SIZE - 1))) {
+		for(int row_index = start_row_index; row_index <= end_row_index; row_index++){
+			for(int col_index = start_col_index; col_index <= end_col_index; col_index++){
+				if (control_board[row+row_index][col+col_index] == '*')
+					number_of_bomb ++;
+			}
+		}
 
-            //Sides
-            if (control_board[row][col + 1] == '*')
-                number_of_bomb ++;
-            if (control_board[row][col - 1] == '*')
-                number_of_bomb ++;
-            //Up and down
-            if (control_board[row - 1][col] == '*')
-                number_of_bomb++;
-            if (control_board[row + 1][col] == '*')
-                number_of_bomb++;
-            //Diagonals
-            if (control_board[row + 1][col + 1] == '*')
-                number_of_bomb++;
-            if (control_board[row - 1][col - 1] == '*')
-                number_of_bomb++;
-            if (control_board[row - 1][col + 1] == '*')
-                number_of_bomb++;
-            if (control_board[row + 1][col - 1] == '*')
-                number_of_bomb++;
-        }
-
-        //Position in on the upper border. 5 adjacent blocks can be scanned
-        if (row == 0  && (col >= 1 && col < (BOARD_SIZE - 1))) {
-
-            //Sides
-            if (control_board[row][col + 1] == '*')
-                number_of_bomb ++;
-            if (control_board[row][col - 1] == '*')
-                number_of_bomb ++;
-            //Down
-            if (control_board[row + 1][col] == '*')
-                number_of_bomb++;
-            //Diagonals
-            if (control_board[row + 1][col + 1] == '*')
-                number_of_bomb++;
-            if (control_board[row + 1][col - 1] == '*')
-                number_of_bomb++;
-        }
-
-        //Position in on the lower border. 5 adjacent blocks can be scanned
-        if (row == (BOARD_SIZE - 1) && (col >= 1 && col < (BOARD_SIZE - 1))) {
-
-            //Sides
-            if (control_board[row][col + 1] == '*')
-                number_of_bomb ++;
-            if (control_board[row][col - 1] == '*')
-                number_of_bomb ++;
-            //Up
-            if (control_board[row - 1][col] == '*')
-                number_of_bomb++;
-            //Diagonals
-
-            if (control_board[row - 1][col - 1] == '*')
-                number_of_bomb++;
-            if (control_board[row - 1][col + 1] == '*')
-                number_of_bomb++;
-        }
-
-        //Position in on the right border. 5 adjacent blocks can be scanned
-        if ((row >= 1 && row < (BOARD_SIZE - 1)) && col == (BOARD_SIZE - 1)) {
-
-            //Side
-            if (control_board[row][col - 1] == '*')
-                number_of_bomb ++;
-            //Up and down
-            if (control_board[row - 1][col] == '*')
-                number_of_bomb++;
-            if (control_board[row + 1][col] == '*')
-                number_of_bomb++;
-            //Diagonals
-            if (control_board[row - 1][col - 1] == '*')
-                number_of_bomb++;
-            if (control_board[row + 1][col - 1] == '*')
-                number_of_bomb++;
-        }
-
-        //Position in on the left border. 5 adjacent blocks can be scanned
-        if ((row >= 1 && row < (BOARD_SIZE - 1)) && col == 0) {
-
-            //Side
-            if (control_board[row][col + 1] == '*')
-                number_of_bomb ++;
-            //Up and down
-            if (control_board[row - 1][col] == '*')
-                number_of_bomb++;
-            if (control_board[row + 1][col] == '*')
-                number_of_bomb++;
-            //Diagonals
-            if (control_board[row + 1][col + 1] == '*')
-                number_of_bomb++;
-            if (control_board[row - 1][col + 1] == '*')
-                number_of_bomb++;
-        }
-
-        //Position in on the 0x0 diagonal. 3 adjacent blocks can be scanned
-        if (row == 0 && col == 0) {
-
-            //Side
-            if (control_board[row][col + 1] == '*')
-                number_of_bomb ++;
-            //Down
-            if (control_board[row + 1][col] == '*')
-                number_of_bomb++;
-            //Diagonal
-            if (control_board[row + 1][col + 1] == '*')
-                number_of_bomb++;
-        }
-
-        //Position in on the 0x(BOARD_SIZE - 1) diagonal. 3 adjacent blocks can be scanned
-        if (row == 0 && col == (BOARD_SIZE - 1)) {
-
-            //Side
-            if (control_board[row][col - 1] == '*')
-                number_of_bomb ++;
-            //Down
-            if (control_board[row + 1][col] == '*')
-                number_of_bomb++;
-            //Diagonal
-            if (control_board[row + 1][col - 1] == '*')
-                number_of_bomb++;
-        }
-
-        //Position in on the (BOARD_SIZE - 1)x(BOARD_SIZE - 1) diagonal. 3 adjacent blocks can be scanned
-        if (row == (BOARD_SIZE - 1) && col == (BOARD_SIZE - 1)) {
-
-            //Side
-            if (control_board[row][col - 1] == '*')
-                number_of_bomb ++;
-            //Up
-            if (control_board[row -1][col] == '*')
-                number_of_bomb++;
-            //Diagonal
-            if (control_board[row - 1][col - 1] == '*')
-                number_of_bomb++;
-        }
-
-        //Position in on the (BOARD_SIZE - 1)x0 diagonal. 3 adjacent blocks can be scanned
-        if (row == (BOARD_SIZE - 1) && col == 0) {
-
-            //Side
-            if (control_board[row][col + 1] == '*')
-                number_of_bomb ++;
-            //Up
-            if (control_board[row - 1][col] == '*')
-                number_of_bomb++;
-            //Diagonal
-            if (control_board[row - 1][col + 1] == '*')
-                number_of_bomb++;
-        }
     }
 
     return number_of_bomb;
 }
+
 
 
 int Get_Game_Status(char control_board[BOARD_SIZE][BOARD_SIZE], int game_status) {
