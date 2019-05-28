@@ -36,6 +36,7 @@ typedef struct Point {
 }Point;
 
 //Declaration
+void Init_Game(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOARD_SIZE][BOARD_SIZE]);
 int Select_Difficulty();
 int Initialize_Control_Board(char control_board[BOARD_SIZE][BOARD_SIZE], int difficulty);
 void Initialize_Showed_Board(char showed_board[BOARD_SIZE][BOARD_SIZE]);
@@ -43,8 +44,9 @@ void Print_Board(char board[BOARD_SIZE][BOARD_SIZE]);
 Point Get_Board_Position();
 int Board_Update(char control_board[BOARD_SIZE][BOARD_SIZE],
                                   char showed_board[BOARD_SIZE][BOARD_SIZE], Point pos);
-int Get_Around_Mine_Number(char control_board[BOARD_SIZE][BOARD_SIZE], int row, int col);
+int Get_Around_Mine_Number(char control_board[BOARD_SIZE][BOARD_SIZE], Point pos);
 int Get_Game_Status(char control_board[BOARD_SIZE][BOARD_SIZE], int game_status);
+int Input_Replay_Game(char control_board[BOARD_SIZE][BOARD_SIZE]);
 
 
 //Main function
@@ -53,8 +55,6 @@ int main() {
 	char control_board[BOARD_SIZE][BOARD_SIZE];
     char showed_board[BOARD_SIZE][BOARD_SIZE];
 
-    int difficulty;
-    int number_of_bombs;
     int game_status = START;
 	Point pos;
 
@@ -63,12 +63,7 @@ int main() {
     //Loop that keeps the game going
     while (game_status == START || game_status == KEEP_ON || game_status == REPLAY) {
 		if (game_status == START || game_status == REPLAY) {
-            difficulty = Select_Difficulty();
-
-            number_of_bombs = Initialize_Control_Board(control_board, difficulty);
-            printf("\nThe board has %d bombs. Here we go again!\n", number_of_bombs);
-
-            Initialize_Showed_Board(showed_board);
+            Init_Game(control_board, showed_board);
         }
 
 		Print_Board(showed_board);
@@ -83,6 +78,25 @@ int main() {
 
 
 //Definition
+void Init_Game(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOARD_SIZE][BOARD_SIZE]) {
+	/*
+	 *@brief   게임의 난이도, 폭탄 수, 게임판 등을 초기화 하는 함수
+	 *@param   control_board[][] : 사용자에게 보이지 않는 게임판
+	 *		   showed_board[][] : 사용자에게 보이는 게임판
+	 */
+	
+	int difficulty;
+	int number_of_bombs;
+
+	difficulty = Select_Difficulty();
+
+    number_of_bombs = Initialize_Control_Board(control_board, difficulty);
+    printf("\nThe board has %d bombs. Here we go again!\n", number_of_bombs);
+
+    Initialize_Showed_Board(showed_board);
+}
+
+
 int Select_Difficulty() {
     /*
     Receives user input and returns an integer that will affect bomb placing probability.
@@ -244,7 +258,7 @@ Point Get_Board_Position() {
 	int mine_checker_feedback;
 
 	//mine_checker function call
-    mine_checker_feedback = Get_Around_Mine_Number(control_board, pos.row, pos.col);
+    mine_checker_feedback = Get_Around_Mine_Number(control_board, pos);
 
     if (mine_checker_feedback == -1) {
 
@@ -264,7 +278,7 @@ Point Get_Board_Position() {
 }
 
 
-int Get_Around_Mine_Number(char control_board[BOARD_SIZE][BOARD_SIZE], int row, int col) {
+int Get_Around_Mine_Number(char control_board[BOARD_SIZE][BOARD_SIZE], Point pos) {
     /*
     Receives row and column and checks on control_board if it hits a mine. If that's the case, returns -1.
     Otherwise, checks control_board for the number adjacent mines and returns it
@@ -277,7 +291,7 @@ int Get_Around_Mine_Number(char control_board[BOARD_SIZE][BOARD_SIZE], int row, 
 
     int number_of_bomb = 0;
 
-    if (control_board[row][col] == '*') {
+    if (control_board[pos.row][pos.col] == '*') {
 
         return -1;
     }
@@ -289,14 +303,14 @@ int Get_Around_Mine_Number(char control_board[BOARD_SIZE][BOARD_SIZE], int row, 
 		int start_col_index = -1;
 		int end_col_index = 1;
 		
-		if( row == 0 ) start_row_index = 0;
-		if( col == 0 ) start_col_index = 0;
-		if( row == BOARD_SIZE - 1) end_row_index = 0;
-		if( col == BOARD_SIZE - 1) end_col_index = 0;
+		if( pos.row == 0 ) start_row_index = 0;
+		if( pos.col == 0 ) start_col_index = 0;
+		if( pos.row == BOARD_SIZE - 1) end_row_index = 0;
+		if( pos.col == BOARD_SIZE - 1) end_col_index = 0;
 
 		for(int row_index = start_row_index; row_index <= end_row_index; row_index++){
 			for(int col_index = start_col_index; col_index <= end_col_index; col_index++){
-				if (control_board[row+row_index][col+col_index] == '*')
+				if (control_board[pos.row+row_index][pos.col+col_index] == '*')
 					number_of_bomb ++;
 			}
 		}
@@ -314,29 +328,47 @@ int Get_Game_Status(char control_board[BOARD_SIZE][BOARD_SIZE], int game_status)
     it just returns the same game_status so the game loop continues
     */
 	/*
-	 *@brief   게임 상태가 WIN이나 LOSE일 경우 사용자에게 게임을 다시할 지 입력 받는다.
+	 *@brief   현재 게임 상태에 따라서 다음 게임 상태를 리턴하는 함수
 	 *@param   control_board[][] : 사용자에게 보이지 않는 게임판
 	 *		   game_status : 게임의 상태
-	 *		   input : 게임을 다시할 지를 입력받는 변수
-	 *@return   사용자의 입력이 y일 경우 REPLAY, 사용자의 입력이 n일 경우 GAMEOVER,
+	 *		   next_status : 다음 게임 상태를 나타내는 변수, 
+	 *		                 현재 게임 상태가 WIN이나 LOSE가 아닐 경우 게임을 계속 진행해야 하기 때문에 KEEP_ON으로 초기화
+	 *@return   게임 상태가 WIN이나 LOSE일 경우 Input_Replay_Game()에서 받은 리턴 값(REPLAY, GAMEOVER),
 	 *			게임 상태가 WIN이나 LOSE가 아닐 경우 KEEP_ON
 	 *			(REPLAY, GAMEOVER, KEEP_ON은 game_status가 가질 상수)
 	 */
 
-    char input;
+	int next_status = KEEP_ON;
 
 	if (game_status == WIN) {
         printf("\n\nYou did it! You cleared the board. Congratulations!!!\n\n");
+		next_status = Input_Replay_Game(control_board);
 	}
 	else if (game_status == LOSE) {
 		printf("\n\nOh no! You hit a mine! ¯\\_(ツ)_/¯ \n\n");
+		next_status = Input_Replay_Game(control_board);
 	}
+	else 
+		return next_status;
 
-	if (game_status == WIN || game_status == LOSE){
-		Print_Board(control_board);
+	return next_status;
+}
 
-		//User input
-        do {
+
+int Input_Replay_Game(char control_board[BOARD_SIZE][BOARD_SIZE]) {
+	/*
+	 *@brief   사용자에게 게임을 다시 할지 입력받는 함수
+	 *@param   control_board[][] : 사용자에게 보이지 않는 게임판
+	 *		   input : 게임을 다시할 지 사용자의 입력을 받는 변수
+	 *@return   사용자의 입력이 y일 경우 REPLAY, 사용자의 입력이 n일 경우 GAMEOVER
+	 *			(REPLAY, GAMEOVER는 game_status가 가질 상수)
+	 */
+
+	char input;	
+
+	Print_Board(control_board);
+
+	do {
             printf("\nDo you want to play again (y/n)? ");
             scanf(" %c", &input);
             printf("\n\n");
@@ -351,13 +383,9 @@ int Get_Game_Status(char control_board[BOARD_SIZE][BOARD_SIZE], int game_status)
                 return GAME_OVER;
             }
             else {
-
                 printf("Wrong input. Try again...");
             }
         } while (input != 'y' && input != 'n');
-	}
-	else
-		return KEEP_ON;
 
-	return KEEP_ON;
+	return GAME_OVER;
 }
