@@ -30,13 +30,13 @@ Reference:
 
 //Declaration
 void Display_Welcome_Message();
-int difficulty_seletor();
+int Select_Difficulty();
 int Initialize_Control_Board(char control_board[BOARD_SIZE][BOARD_SIZE], int difficulty);
 void Initialize_Showed_Board(char showed_board[BOARD_SIZE][BOARD_SIZE]);
-void board_printer(char board[BOARD_SIZE][BOARD_SIZE]);
+void Print_Board(char board[BOARD_SIZE][BOARD_SIZE]);
 int Get_Board_Position_and_Board_Update(char control_board[BOARD_SIZE][BOARD_SIZE],
                                   char showed_board[BOARD_SIZE][BOARD_SIZE]);
-int mine_checker(char control_board[BOARD_SIZE][BOARD_SIZE], int row, int col);
+int Get_Around_Mine_Number(char control_board[BOARD_SIZE][BOARD_SIZE], int row, int col);
 int Get_Game_Status(char control_board[BOARD_SIZE][BOARD_SIZE], int game_status);
 
 
@@ -52,7 +52,7 @@ int main() {
 
     Display_Welcome_Message();
 
-    difficulty = difficulty_seletor();
+    difficulty = Select_Difficulty();
 
     number_of_bombs = Initialize_Control_Board(control_board, difficulty);
 
@@ -64,14 +64,14 @@ int main() {
     //Loop that keeps the game going
     while (game_status == KEEP_ON || game_status == REPLAY) {
 
-        board_printer(showed_board);
+        Print_Board(showed_board);
 
         game_status = Get_Board_Position_and_Board_Update(control_board, showed_board);
         game_status = Get_Game_Status(control_board, game_status);
 
         if (game_status == REPLAY) {
 
-            difficulty = difficulty_seletor();
+            difficulty = Select_Difficulty();
 
             number_of_bombs = Initialize_Control_Board(control_board, difficulty);
             printf("\nThe board has %d bombs. Here we go again!\n", number_of_bombs);
@@ -103,7 +103,7 @@ void Display_Welcome_Message() {
 }
 
 
-int difficulty_seletor() {
+int Select_Difficulty() {
     /*
     Receives user input and returns an integer that will affect bomb placing probability.
     The higher this integer, higher the difficulty
@@ -204,7 +204,7 @@ void Initialize_Showed_Board(char showed_board[BOARD_SIZE][BOARD_SIZE]) {
 }
 
 
-void board_printer(char board[BOARD_SIZE][BOARD_SIZE]) {
+void Print_Board(char board[BOARD_SIZE][BOARD_SIZE]) {
     /*
     Prints the parameter array in a user friendly way
     */
@@ -257,7 +257,7 @@ int Get_Board_Position_and_Board_Update(char control_board[BOARD_SIZE][BOARD_SIZ
     } while (row >= BOARD_SIZE && col >= BOARD_SIZE);
 
     //mine_checker function call
-    mine_checker_feedback = mine_checker(control_board, row, col);
+    mine_checker_feedback = Get_Around_Mine_Number(control_board, row, col);
 
     if (mine_checker_feedback == -1) {
 
@@ -277,13 +277,13 @@ int Get_Board_Position_and_Board_Update(char control_board[BOARD_SIZE][BOARD_SIZ
 }
 
 
-int mine_checker(char control_board[BOARD_SIZE][BOARD_SIZE], int row, int col) {
+int Get_Around_Mine_Number(char control_board[BOARD_SIZE][BOARD_SIZE], int row, int col) {
     /*
     Receives row and column and checks on control_board if it hits a mine. If that's the case, returns -1.
     Otherwise, checks control_board for the number adjacent mines and returns it
     */
 
-    int bomb_counter = 0;
+    int number_of_bomb = 0;
 
     if (control_board[row][col] == '*') {
 
@@ -299,23 +299,23 @@ int mine_checker(char control_board[BOARD_SIZE][BOARD_SIZE], int row, int col) {
 
             //Sides
             if (control_board[row][col + 1] == '*')
-                bomb_counter ++;
+                number_of_bomb ++;
             if (control_board[row][col - 1] == '*')
-                bomb_counter ++;
+                number_of_bomb ++;
             //Up and down
             if (control_board[row - 1][col] == '*')
-                bomb_counter++;
+                number_of_bomb++;
             if (control_board[row + 1][col] == '*')
-                bomb_counter++;
+                number_of_bomb++;
             //Diagonals
             if (control_board[row + 1][col + 1] == '*')
-                bomb_counter++;
+                number_of_bomb++;
             if (control_board[row - 1][col - 1] == '*')
-                bomb_counter++;
+                number_of_bomb++;
             if (control_board[row - 1][col + 1] == '*')
-                bomb_counter++;
+                number_of_bomb++;
             if (control_board[row + 1][col - 1] == '*')
-                bomb_counter++;
+                number_of_bomb++;
         }
 
         //Position in on the upper border. 5 adjacent blocks can be scanned
@@ -323,17 +323,17 @@ int mine_checker(char control_board[BOARD_SIZE][BOARD_SIZE], int row, int col) {
 
             //Sides
             if (control_board[row][col + 1] == '*')
-                bomb_counter ++;
+                number_of_bomb ++;
             if (control_board[row][col - 1] == '*')
-                bomb_counter ++;
+                number_of_bomb ++;
             //Down
             if (control_board[row + 1][col] == '*')
-                bomb_counter++;
+                number_of_bomb++;
             //Diagonals
             if (control_board[row + 1][col + 1] == '*')
-                bomb_counter++;
+                number_of_bomb++;
             if (control_board[row + 1][col - 1] == '*')
-                bomb_counter++;
+                number_of_bomb++;
         }
 
         //Position in on the lower border. 5 adjacent blocks can be scanned
@@ -341,18 +341,18 @@ int mine_checker(char control_board[BOARD_SIZE][BOARD_SIZE], int row, int col) {
 
             //Sides
             if (control_board[row][col + 1] == '*')
-                bomb_counter ++;
+                number_of_bomb ++;
             if (control_board[row][col - 1] == '*')
-                bomb_counter ++;
+                number_of_bomb ++;
             //Up
             if (control_board[row - 1][col] == '*')
-                bomb_counter++;
+                number_of_bomb++;
             //Diagonals
 
             if (control_board[row - 1][col - 1] == '*')
-                bomb_counter++;
+                number_of_bomb++;
             if (control_board[row - 1][col + 1] == '*')
-                bomb_counter++;
+                number_of_bomb++;
         }
 
         //Position in on the right border. 5 adjacent blocks can be scanned
@@ -360,17 +360,17 @@ int mine_checker(char control_board[BOARD_SIZE][BOARD_SIZE], int row, int col) {
 
             //Side
             if (control_board[row][col - 1] == '*')
-                bomb_counter ++;
+                number_of_bomb ++;
             //Up and down
             if (control_board[row - 1][col] == '*')
-                bomb_counter++;
+                number_of_bomb++;
             if (control_board[row + 1][col] == '*')
-                bomb_counter++;
+                number_of_bomb++;
             //Diagonals
             if (control_board[row - 1][col - 1] == '*')
-                bomb_counter++;
+                number_of_bomb++;
             if (control_board[row + 1][col - 1] == '*')
-                bomb_counter++;
+                number_of_bomb++;
         }
 
         //Position in on the left border. 5 adjacent blocks can be scanned
@@ -378,17 +378,17 @@ int mine_checker(char control_board[BOARD_SIZE][BOARD_SIZE], int row, int col) {
 
             //Side
             if (control_board[row][col + 1] == '*')
-                bomb_counter ++;
+                number_of_bomb ++;
             //Up and down
             if (control_board[row - 1][col] == '*')
-                bomb_counter++;
+                number_of_bomb++;
             if (control_board[row + 1][col] == '*')
-                bomb_counter++;
+                number_of_bomb++;
             //Diagonals
             if (control_board[row + 1][col + 1] == '*')
-                bomb_counter++;
+                number_of_bomb++;
             if (control_board[row - 1][col + 1] == '*')
-                bomb_counter++;
+                number_of_bomb++;
         }
 
         //Position in on the 0x0 diagonal. 3 adjacent blocks can be scanned
@@ -396,13 +396,13 @@ int mine_checker(char control_board[BOARD_SIZE][BOARD_SIZE], int row, int col) {
 
             //Side
             if (control_board[row][col + 1] == '*')
-                bomb_counter ++;
+                number_of_bomb ++;
             //Down
             if (control_board[row + 1][col] == '*')
-                bomb_counter++;
+                number_of_bomb++;
             //Diagonal
             if (control_board[row + 1][col + 1] == '*')
-                bomb_counter++;
+                number_of_bomb++;
         }
 
         //Position in on the 0x(BOARD_SIZE - 1) diagonal. 3 adjacent blocks can be scanned
@@ -410,13 +410,13 @@ int mine_checker(char control_board[BOARD_SIZE][BOARD_SIZE], int row, int col) {
 
             //Side
             if (control_board[row][col - 1] == '*')
-                bomb_counter ++;
+                number_of_bomb ++;
             //Down
             if (control_board[row + 1][col] == '*')
-                bomb_counter++;
+                number_of_bomb++;
             //Diagonal
             if (control_board[row + 1][col - 1] == '*')
-                bomb_counter++;
+                number_of_bomb++;
         }
 
         //Position in on the (BOARD_SIZE - 1)x(BOARD_SIZE - 1) diagonal. 3 adjacent blocks can be scanned
@@ -424,13 +424,13 @@ int mine_checker(char control_board[BOARD_SIZE][BOARD_SIZE], int row, int col) {
 
             //Side
             if (control_board[row][col - 1] == '*')
-                bomb_counter ++;
+                number_of_bomb ++;
             //Up
             if (control_board[row -1][col] == '*')
-                bomb_counter++;
+                number_of_bomb++;
             //Diagonal
             if (control_board[row - 1][col - 1] == '*')
-                bomb_counter++;
+                number_of_bomb++;
         }
 
         //Position in on the (BOARD_SIZE - 1)x0 diagonal. 3 adjacent blocks can be scanned
@@ -438,17 +438,17 @@ int mine_checker(char control_board[BOARD_SIZE][BOARD_SIZE], int row, int col) {
 
             //Side
             if (control_board[row][col + 1] == '*')
-                bomb_counter ++;
+                number_of_bomb ++;
             //Up
             if (control_board[row - 1][col] == '*')
-                bomb_counter++;
+                number_of_bomb++;
             //Diagonal
             if (control_board[row - 1][col + 1] == '*')
-                bomb_counter++;
+                number_of_bomb++;
         }
     }
 
-    return bomb_counter;
+    return number_of_bomb;
 }
 
 
@@ -465,7 +465,7 @@ int Get_Game_Status(char control_board[BOARD_SIZE][BOARD_SIZE], int game_status)
 
         printf("\n\nYou did it! You cleared the board. Congratulations!!!\n\n");
 
-        board_printer(control_board);
+        Print_Board(control_board);
 
         //User input
         do {
@@ -497,7 +497,7 @@ int Get_Game_Status(char control_board[BOARD_SIZE][BOARD_SIZE], int game_status)
 
         printf("\n\nOh no! You hit a mine! ¯\\_(ツ)_/¯ \n\n");
 
-        board_printer(control_board);
+        Print_Board(control_board);
 
         //User input
         do {
