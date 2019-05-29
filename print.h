@@ -1,7 +1,7 @@
 
 #define BOARD_SIZE 6
 
-#define INIT (-40)
+#define INIT (-10)
 #define GAME_OVER (-50)
 
 

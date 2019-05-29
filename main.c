@@ -9,11 +9,10 @@
 
 #define BOARD_SIZE 6
 // @brief 게임 상태를 나타내는 상수이다. 상수의 값에는 의미가 없다.
-#define INIT (0)	
-#define WIN (-10)
-#define LOSE (-20)
-#define KEEP_ON (-30)
-#define INIT (-40)
+#define INIT (-10)	
+#define WIN (-20)
+#define LOSE (-30)
+#define KEEP_ON (-40)
 #define GAME_OVER (-50)
 
 
@@ -78,11 +77,11 @@ Point Get_Board_Position() {
 }
 
 int Board_Update(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOARD_SIZE][BOARD_SIZE], Point pos) {
-	
+   
     int mine_checker_feedback = Get_Around_Mine_Number(control_board, pos);
 
-	const char CONTROL_BOARD_OPEN = 'x';
-	const int INT_TO_CHAR = 48;
+    const char OPENED = 'x';
+    const int INT_TO_CHAR = 48;
 
     if (mine_checker_feedback == LOSE) {
 
@@ -91,7 +90,7 @@ int Board_Update(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[B
 
     else {
 
-        control_board[pos.row][pos.col] = CONTROL_BOARD_OPEN;
+        control_board[pos.row][pos.col] = OPENED;
         
         showed_board[pos.row][pos.col] = (char) (mine_checker_feedback + INT_TO_CHAR);
 
