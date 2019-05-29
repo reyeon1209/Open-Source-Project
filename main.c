@@ -80,15 +80,16 @@ Point Get_Board_Position() {
 int Board_Update(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOARD_SIZE][BOARD_SIZE], Point pos) {
 	
     int mine_checker_feedback = Get_Around_Mine_Number(control_board, pos);
+	char control_board_open = 'x';
 
-    if (mine_checker_feedback == -1) {
+    if (mine_checker_feedback == LOSE) {
 
         return LOSE;
     }
 
     else {
 
-        control_board[pos.row][pos.col] = 'x';
+        control_board[pos.row][pos.col] = control_board_open;
         
         showed_board[pos.row][pos.col] = (char) (mine_checker_feedback + 48);
 
@@ -113,7 +114,7 @@ int Get_Around_Mine_Number(char control_board[BOARD_SIZE][BOARD_SIZE], Point pos
 
     if (control_board[pos.row][pos.col] == '*') {
 
-        return -1;
+        return LOSE;
     }
 
     else {

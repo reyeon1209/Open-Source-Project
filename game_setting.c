@@ -5,8 +5,6 @@
 #include <math.h>
 #include "game_setting.h"
 
-#define BOARD_SIZE 6
-
 
 void Init_Game(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOARD_SIZE][BOARD_SIZE]) {
 	/*
@@ -70,6 +68,8 @@ int Initialize_Control_Board(char control_board[BOARD_SIZE][BOARD_SIZE], int dif
     int counter = 0;
     int random_number;
 	int row, col;
+	char mine = '*', not_mine = 'o';
+	int random_range = 10;
 	
     time_t t;
     srand((unsigned int) (&t));
@@ -79,17 +79,17 @@ int Initialize_Control_Board(char control_board[BOARD_SIZE][BOARD_SIZE], int dif
 
         for(col = 0; col < BOARD_SIZE; col++) {
 
-            random_number = rand() % 11;
+            random_number = rand() % (random_range + 1);
 
             if (random_number < difficulty) {
 
-                control_board[row][col] = '*';
+                control_board[row][col] = mine;
                 counter ++;
             }
 
             else {
 
-                control_board[row][col] = 'o';
+                control_board[row][col] = not_mine;
             }
         }
     }

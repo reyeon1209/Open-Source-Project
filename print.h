@@ -1,3 +1,4 @@
+
 #define BOARD_SIZE 6
 
 #define REPLAY (-40)
