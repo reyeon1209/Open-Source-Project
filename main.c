@@ -8,6 +8,8 @@
 
 
 #define BOARD_SIZE 6
+#define TRUE 1
+#define FALSE 0
 // @brief 게임 상태를 나타내는 상수이다. 상수의 값에는 의미가 없다.
 #define INIT (-10)	
 #define WIN (-20)
@@ -23,7 +25,9 @@ typedef struct Point {
 
 
 Point Get_Board_Position();
+int IsOverLimit(int row, int col);
 int Board_Update(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOARD_SIZE][BOARD_SIZE], Point pos);
+char IntToChar (int number);
 int Get_Around_Mine_Number(char control_board[BOARD_SIZE][BOARD_SIZE], Point pos);
 int Get_Game_Status(char control_board[BOARD_SIZE][BOARD_SIZE], int game_status);
 
@@ -57,6 +61,7 @@ int main() {
 Point Get_Board_Position() {
 	
 	Point pos;
+	int isOverLimit = FALSE;
 
     while (1) {
         printf("\n\nSelect a row: ");
@@ -64,7 +69,8 @@ Point Get_Board_Position() {
         printf("Select a collumn: ");
         scanf(" %d", &pos.col);
 
-        if (pos.row >= BOARD_SIZE || pos.col >= BOARD_SIZE) {
+        isOverLimit = IsOverLimit(pos.row, pos.col);
+        if (isOverLimit) {
             printf("\n\nValue too big. Should go from 0 to %d. Try again", BOARD_SIZE);
 			continue;
         }
@@ -76,12 +82,18 @@ Point Get_Board_Position() {
 	return pos;
 }
 
+int IsOverLimit(int row, int col) {
+
+	if (row >= BOARD_SIZE)	return TRUE;
+	if (col >= BOARD_SIZE)	return TRUE;
+	else	return FALSE;
+}
+
 int Board_Update(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOARD_SIZE][BOARD_SIZE], Point pos) {
    
     int mine_checker_feedback = Get_Around_Mine_Number(control_board, pos);
 
     const char OPENED = 'x';
-    const int INT_TO_CHAR = 48;
 
     if (mine_checker_feedback == LOSE) {
 
@@ -92,12 +104,18 @@ int Board_Update(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[B
 
         control_board[pos.row][pos.col] = OPENED;
         
-        showed_board[pos.row][pos.col] = (char) (mine_checker_feedback + INT_TO_CHAR);
+        showed_board[pos.row][pos.col] = IntToChar(mine_checker_feedback);
 
         return KEEP_ON;
     }
 }
 
+char IntToChar (int number) {
+
+	const int ASCII = 48;
+
+	return number + ASCII;
+}
 
 int Get_Around_Mine_Number(char control_board[BOARD_SIZE][BOARD_SIZE], Point pos) {
 	/*
