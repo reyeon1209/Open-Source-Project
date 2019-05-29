@@ -79,13 +79,14 @@ int Initialize_Control_Board(char control_board[BOARD_SIZE][BOARD_SIZE], int dif
     Empty spaces are 'o', bombs are '*'. The function returns the number of bombs on the board
     */
 
-    //Using time as seed
-    time_t t;
-    srand((unsigned int) (&t));
-
     int counter = 0;
     int random_number;
 	int row, col;
+	
+	//Using time as seed
+    time_t t;
+    srand((unsigned int) (&t));
+    
 
     for (row = 0; row < BOARD_SIZE; row++) {
 
@@ -115,15 +116,14 @@ int Initialize_Control_Board(char control_board[BOARD_SIZE][BOARD_SIZE], int dif
 
 void Initialize_Showed_Board(char showed_board[BOARD_SIZE][BOARD_SIZE]) {
     /*
-    Assigns 'X' for the whole showed_board
-    */
-	/*
 	 *@brief   showed_board[][]를 모두 'X'로 초기화 ('X'는 지뢰를 검사하기 전 상태)
 	 *@param   showed_board[][] : 사용자가 볼 수 있는 게임판
 	 */
 
-    for (int row = 0; row < BOARD_SIZE; row++) {
-        for (int col = 0; col < BOARD_SIZE; col++) {
+	int row, col;
+	
+    for (row = 0; row < BOARD_SIZE; row++) {
+        for (col = 0; col < BOARD_SIZE; col++) {
             showed_board[row][col] = 'X';
         }
     }

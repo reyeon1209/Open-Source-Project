@@ -170,11 +170,6 @@ int Get_Around_Mine_Number(char control_board[BOARD_SIZE][BOARD_SIZE], Point pos
 
 int Get_Game_Status(char control_board[BOARD_SIZE][BOARD_SIZE], int game_status) {
     /*
-    Receives the status code. For WIN and LOSE, it calls board_printer to show control_board and asks user
-    about replaying or not, returning the appropriate defined code. For KEEP_ON,
-    it just returns the same game_status so the game loop continues
-    */
-	/*
 	 *@brief   현재 게임 상태에 따라서 다음 게임 상태를 리턴하는 함수
 	 *@param   control_board[][] : 사용자에게 보이지 않는 게임판
 	 *		   game_status : 게임의 상태
