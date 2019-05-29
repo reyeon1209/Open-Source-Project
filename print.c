@@ -53,28 +53,28 @@ int Input_Replay_Game(char control_board[BOARD_SIZE][BOARD_SIZE]) {
 	 *			(REPLAY, GAMEOVER는 game_status가 가질 상수)
 	 */
 
-	char input;	
+	char input = '\0';	
 
 	Print_Board(control_board);
+	
+	while (input != 'y' && input != 'n'){
+		printf("\nDo you want to play again (y/n)? ");
+        scanf(" %c", &input);
+        printf("\n\n");
 
-	do {
-            printf("\nDo you want to play again (y/n)? ");
-            scanf(" %c", &input);
-            printf("\n\n");
+        if (input == 'y') {
 
-            if (input == 'y') {
+			return REPLAY;
+        }
+        else if (input == 'n') {
+            printf("Thanks for playing!\n\n");
 
-                return REPLAY;
-            }
-            else if (input == 'n') {
-                printf("Thanks for playing!\n\n");
-
-                return GAME_OVER;
-            }
-            else {
-                printf("Wrong input. Try again...");
-            }
-        } while (input != 'y' && input != 'n');
+            return GAME_OVER;
+        }
+        else {
+            printf("Wrong input. Try again...");
+        }
+	}
 
 	return GAME_OVER;
 }
