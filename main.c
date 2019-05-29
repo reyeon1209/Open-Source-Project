@@ -9,11 +9,11 @@
 
 #define BOARD_SIZE 6
 // @brief 게임 상태를 나타내는 상수이다. 상수의 값에는 의미가 없다.
-#define START (0)	
+#define INIT (0)	
 #define WIN (-10)
 #define LOSE (-20)
 #define KEEP_ON (-30)
-#define REPLAY (-40)
+#define INIT (-40)
 #define GAME_OVER (-50)
 
 
@@ -34,13 +34,13 @@ int main() {
 	char control_board[BOARD_SIZE][BOARD_SIZE];
     char showed_board[BOARD_SIZE][BOARD_SIZE];
 
-    int game_status = START;
+    int game_status = INIT;
 	Point pos;
 
     Display_Welcome_Message();
 
-    while (game_status == START || game_status == KEEP_ON || game_status == REPLAY) {
-		if (game_status == START || game_status == REPLAY) {
+    while (game_status == INIT || game_status == KEEP_ON) {
+		if (game_status == INIT) {
             Init_Game(control_board, showed_board);
         }
 
@@ -144,9 +144,9 @@ int Get_Game_Status(char control_board[BOARD_SIZE][BOARD_SIZE], int game_status)
 	 *			game_status : 게임의 상태
 	 *			next_status : 다음 게임 상태를 나타내는 변수, 
 	 *		                 현재 게임 상태가 WIN이나 LOSE가 아닐 경우 게임을 계속 진행해야 하기 때문에 KEEP_ON으로 초기화
-	 * @return	게임 상태가 WIN이나 LOSE일 경우 Input_Replay_Game()에서 받은 리턴 값(REPLAY, GAMEOVER),
+	 * @return	게임 상태가 WIN이나 LOSE일 경우 Input_Replay_Game()에서 받은 리턴 값(INIT, GAMEOVER),
 	 *			게임 상태가 WIN이나 LOSE가 아닐 경우 KEEP_ON
-	 *			(REPLAY, GAMEOVER, KEEP_ON은 game_status가 가질 상수)
+	 *			(INIT, GAMEOVER, KEEP_ON은 game_status가 가질 상수)
 	 */
 
 	int next_status = KEEP_ON;

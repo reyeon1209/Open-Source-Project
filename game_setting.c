@@ -104,11 +104,12 @@ void Initialize_Showed_Board(char showed_board[BOARD_SIZE][BOARD_SIZE]) {
 	 * @param   showed_board[][] : 사용자가 볼 수 있는 게임판
 	 */
 
+	const char UNOPENED = 'X';
 	int row, col;
 	
     for (row = 0; row < BOARD_SIZE; row++) {
         for (col = 0; col < BOARD_SIZE; col++) {
-            showed_board[row][col] = 'X';
+            showed_board[row][col] = UNOPENED;
         }
     }
 }

@@ -44,25 +44,27 @@ int Input_Replay_Game(char control_board[BOARD_SIZE][BOARD_SIZE]) {
 	 * @brief	사용자에게 게임을 다시 할지 입력받는 함수
 	 * @param	control_board[][] : 사용자에게 보이지 않는 게임판
 	 *			input : 게임을 다시할 지 사용자의 입력을 받는 변수
-	 * @return	사용자의 입력이 y일 경우 REPLAY, 사용자의 입력이 n일 경우 GAMEOVER
-	 *			(REPLAY, GAMEOVER는 game_status가 가질 상수)
+	 * @return	사용자의 입력이 y일 경우 INIT, 사용자의 입력이 n일 경우 GAMEOVER
+	 *			(INIT, GAMEOVER는 game_status가 가질 상수)
 	 */
-
+	
+	const char YES = 'y';
+	const char NO = 'n';
 	char input = '\0';	
 
 	Print_Board(control_board);
 	
-	while (input != 'y' && input != 'n') {
+	while (input != YES && input != NO) {
 		printf("\nDo you want to play again (y/n)? ");
         scanf(" %c", &input);
         printf("\n\n");
 
-        if (input == 'y') {
+        if (input == YES) {
 
-			return REPLAY;
+			return INIT;
         }
 
-        else if (input == 'n') {
+        else if (input == NO) {
             printf("Thanks for playing!\n\n");
 
             return GAME_OVER;
