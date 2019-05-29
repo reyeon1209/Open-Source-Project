@@ -25,34 +25,36 @@ void Init_Game(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOA
 }
 
 int Select_Difficulty() {
+	int const EASY = 1;
+	int const NORMAL = 3;
+	int const HARD = 6;
+	int const SAME = 0;
+	int const NOT_SAME = 1;
 
     char input[10];
-    int difficulty = 0;
-    int compare_result = 1;
+    int difficulty;
+    int compare_result = NOT_SAME;
 
-    char easy[10] = "easy";
-    char normal[10] = "normal";
-    char hard[10] = "hard";
 
-    while (compare_result != 0) {
+    while (compare_result != SAME) {
 
         printf("\nEnter the difficulty (easy, normal, hard): ");
         scanf(" %s", input);
 
-        compare_result = strcmp(input, easy);
-        difficulty = 1;
+        compare_result = strcmp(input, "easy");
+        difficulty = EASY;
 
-        if (compare_result != 0) {
+        if (compare_result != SAME) {
 
-            compare_result = strcmp(input, normal);
-            difficulty = 3;
+            compare_result = strcmp(input, "normal");
+            difficulty = NORMAL;
 
-            if (compare_result != 0) {
+            if (compare_result != SAME) {
 
-                compare_result = strcmp(input, hard);
-                difficulty = 6;
+                compare_result = strcmp(input, "hard");
+                difficulty = HARD;
 
-                if (compare_result != 0) {
+                if (compare_result != SAME) {
 
                     printf("\nError with the input. Try again...\n");
                 }

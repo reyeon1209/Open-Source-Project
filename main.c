@@ -119,36 +119,37 @@ char IntToChar (int number) {
 
 int Get_Around_Mine_Number(char control_board[BOARD_SIZE][BOARD_SIZE], Point pos) {
 	/*
+	 * @brief   주위 폭탄 개수 리턴시, 사용자가 선택한 위치가 보드의 가장자리라면 내부 칸의 폭탄만 검사한다
 	 * @params	control_board : 지뢰가 저장된 보드, row : 사용자가 선택한 보드 행, col : 사용자가 선택한 보드 열
 	 * @return	사용자가 선택한 보드 위치에 지뢰가 있다면 -1 리턴, 그렇지 않다면 주변 폭탄 개수 리턴
 	 */
+	const char MINE = '*';
+	const int BOARD_START_POINT = 0;
 
     int number_of_bomb = 0;
 	int start_row_index = -1;
 	int end_row_index = 1;
 	int start_col_index = -1;
 	int end_col_index = 1;
-	int row_index = 0;
-	int col_index = 0;
+	int row_index;
+	int col_index;
 
-    if (control_board[pos.row][pos.col] == '*') {
-
+    if (control_board[pos.row][pos.col] == MINE) {
         return LOSE;
     }
 
     else {
-		if( pos.row == 0 ) start_row_index = 0;
-		if( pos.col == 0 ) start_col_index = 0;
+		if( pos.row == BOARD_START_POINT ) start_row_index = 0;
+		if( pos.col == BOARD_START_POINT ) start_col_index = 0;
 		if( pos.row == BOARD_SIZE - 1) end_row_index = 0;
 		if( pos.col == BOARD_SIZE - 1) end_col_index = 0;
 
 		for(row_index = start_row_index; row_index <= end_row_index; row_index++) {
 			for(col_index = start_col_index; col_index <= end_col_index; col_index++) {
-				if (control_board[pos.row+row_index][pos.col+col_index] == '*')
+				if (control_board[pos.row+row_index][pos.col+col_index] == MINE)
 					number_of_bomb ++;
 			}
 		}
-
     }
 
     return number_of_bomb;
