@@ -68,8 +68,9 @@ int Initialize_Control_Board(char control_board[BOARD_SIZE][BOARD_SIZE], int dif
     int counter = 0;
     int random_number;
 	int row, col;
-	char mine = '*', not_mine = 'o';
-	int random_range = 10;
+
+	const char MINE = '*', NOT_MINE = 'o';
+	const int RANDOM_RANGE = 10;
 	
     time_t t;
     srand((unsigned int) (&t));
@@ -79,17 +80,17 @@ int Initialize_Control_Board(char control_board[BOARD_SIZE][BOARD_SIZE], int dif
 
         for(col = 0; col < BOARD_SIZE; col++) {
 
-            random_number = rand() % (random_range + 1);
+            random_number = rand() % (RANDOM_RANGE + 1);
 
             if (random_number < difficulty) {
 
-                control_board[row][col] = mine;
+                control_board[row][col] = MINE;
                 counter ++;
             }
 
             else {
 
-                control_board[row][col] = not_mine;
+                control_board[row][col] = NOT_MINE;
             }
         }
     }
