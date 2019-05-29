@@ -1,5 +1,6 @@
-//The game board can change by changing this defined constant
+
 #define BOARD_SIZE 6
+
 
 void Init_Game(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOARD_SIZE][BOARD_SIZE]);
 int Select_Difficulty();
