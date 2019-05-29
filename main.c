@@ -117,6 +117,15 @@ char IntToChar (int number) {
 	return number + ASCII;
 }
 
+int IsMine(char control_board[BOARD_SIZE][BOARD_SIZE], int row, int col) {
+	char const MINE = '*';
+	
+	if (control_board[row][col] == MINE)	
+		return TRUE;
+	else	
+		return FALSE;
+}
+
 int Get_Around_Mine_Number(char control_board[BOARD_SIZE][BOARD_SIZE], Point pos) {
 	/*
 	 * @brief   주위 폭탄 개수 리턴시, 사용자가 선택한 위치가 보드의 가장자리라면 내부 칸의 폭탄만 검사한다
@@ -146,7 +155,7 @@ int Get_Around_Mine_Number(char control_board[BOARD_SIZE][BOARD_SIZE], Point pos
 
 		for(row_index = start_row_index; row_index <= end_row_index; row_index++) {
 			for(col_index = start_col_index; col_index <= end_col_index; col_index++) {
-				if (control_board[pos.row+row_index][pos.col+col_index] == MINE)
+				if (IsMine(control_board, pos.row+row_index, pos.col+col_index ))
 					number_of_bomb ++;
 			}
 		}
