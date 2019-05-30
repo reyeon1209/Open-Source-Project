@@ -33,7 +33,7 @@ char IntToChar(int n);
 int IsMine(char control_board[BOARD_SIZE][BOARD_SIZE], int row, int col);
 int Get_Around_Mine_Number(char control_board[BOARD_SIZE][BOARD_SIZE], Point pos);
 int Get_Game_Status(char control_board[BOARD_SIZE][BOARD_SIZE], int game_status);
-
+void GoToXY(Point pos);
 
 int main() {
 
@@ -64,21 +64,39 @@ int main() {
 Point Get_Board_Position() {
 	
 	Point pos;
+	Point row_pos, col_pos, over_pos;
+	
 	int check_input = FALSE;
 	char row[100], col[100];
 
+	const int INPUT_ROW_X = 14;
+	const int INPUT_ROW_Y = 13;
+	const int INPUT_COL_X = 18;
+	const int INPUT_COL_Y = 14;
+	const int OVER_MESSAGE_X = 0;
+	const int OVER_MESSAGE_Y = 17;
+
+	row_pos.col = INPUT_ROW_X;
+	row_pos.row = INPUT_ROW_Y;
+	col_pos.col = INPUT_COL_X;
+	col_pos.row = INPUT_COL_Y;
+	over_pos.col = OVER_MESSAGE_X;
+	over_pos.row = OVER_MESSAGE_Y;
+
     while (!check_input) {
-        printf("\nSelect a row: ");
         scanf(" %s", &row);
 
-        printf("\nSelect a collumn: ");
         scanf(" %s", &col);		
+
+		Remove_Input(row_pos,col_pos,over_pos);
 
 		check_input = CheckInput(row, col);
 	}
 
 	pos.row = atoi(row);	// int로 변환
 	pos.col = atoi(col);
+
+	printf("(r%d,c%d) is opened.                                   ",pos.row, pos.col);
 
 	return pos;
 }
@@ -95,7 +113,7 @@ int CheckInput(char row[100], char col[100]) {
 
     if (strlen(row) >= len || strlen(col) >= len)	// 보드판크기보다 문자열길이가 길면 다시 입력
 	{
-		printf("\nShould go from 0 to %d. Try again\n", BOARD_SIZE-1);
+		printf("Should go from 0 to %d. Try again\n", BOARD_SIZE-1);
 		return FALSE;
 	}
 
@@ -115,8 +133,12 @@ int IsOverLimit(int row, int col) {
 int Board_Update(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOARD_SIZE][BOARD_SIZE], Point pos) {
    
     int mine_checker_feedback = Get_Around_Mine_Number(control_board, pos);
+	Point cursor;
 
     const char OPENED = 'x';
+	const int TOP_OF_BOARD = 5;
+	const int LEFT_OF_BOARD = 1;
+	const int NUM_BLANK = 3;
 
     if (mine_checker_feedback == LOSE) {
 
@@ -128,6 +150,12 @@ int Board_Update(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[B
         control_board[pos.row][pos.col] = OPENED;
         
         showed_board[pos.row][pos.col] = IntToChar(mine_checker_feedback);
+
+		cursor.col = pos.col * NUM_BLANK + LEFT_OF_BOARD;
+		cursor.row = pos.row + TOP_OF_BOARD;
+
+		GoToXY(cursor);
+        printf("%c", showed_board[pos.row][pos.col]);
 
         return KEEP_ON;
     }
@@ -219,4 +247,21 @@ int Get_Game_Status(char control_board[BOARD_SIZE][BOARD_SIZE], int game_status)
 		return next_status;
 
 	return next_status;
+}
+
+void GoToXY(Point pos){
+   COORD cursor;
+
+   cursor.X = pos.col;
+   cursor.Y = pos.row;
+
+   SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursor);
+}
+
+void Remove_Input(Point row_pos, Point col_pos, Point over_pos) {
+	GoToXY(row_pos);
+	printf("\t\t\t\t\t ");
+	GoToXY(col_pos);
+	printf("\t\t\t\t\t ");
+	GoToXY(over_pos);
 }

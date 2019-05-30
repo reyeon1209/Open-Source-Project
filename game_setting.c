@@ -25,6 +25,8 @@ void Init_Game(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOA
     printf("\nThe board has %d bombs. Here we go again!\n", number_of_bombs);
 
     Initialize_Showed_Board(showed_board);
+    printf("\nSelect a row: ");
+    printf("\nSelect a collumn: ");
 }
 
 int Select_Difficulty() {
