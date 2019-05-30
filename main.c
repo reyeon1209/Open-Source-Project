@@ -72,7 +72,7 @@ Point Get_Board_Position() {
 
         isOverLimit = IsOverLimit(pos.row, pos.col);
         if (isOverLimit) {
-            printf("\n\nValue too big. Should go from 0 to %d. Try again", BOARD_SIZE);
+            printf("\n\nValue too big. Should go from 0 to %d. Try again", BOARD_SIZE-1);
 			continue;
         }
 
