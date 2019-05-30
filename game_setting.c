@@ -44,22 +44,23 @@ int Select_Difficulty() {
         compare_result = strcmp(input, "easy");
         difficulty = EASY;
 
-        if (compare_result != SAME) {
+        if (compare_result == SAME) 
+			return difficulty;
 
-            compare_result = strcmp(input, "normal");
-            difficulty = NORMAL;
+        compare_result = strcmp(input, "normal");
+        difficulty = NORMAL;
 
-            if (compare_result != SAME) {
+        if (compare_result == SAME) 
+			return difficulty;
 
-                compare_result = strcmp(input, "hard");
-                difficulty = HARD;
+        compare_result = strcmp(input, "hard");
+        difficulty = HARD;
 
-                if (compare_result != SAME) {
+        if (compare_result == SAME) 
+			return difficulty;
 
-                    printf("\nError with the input. Try again...\n");
-                }
-            }
-        }
+        printf("\nError with the input. Try again...\n");
+        
     } 
 
     return difficulty;
