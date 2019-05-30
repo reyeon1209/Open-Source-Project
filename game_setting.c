@@ -77,27 +77,29 @@ int Initialize_Control_Board(char control_board[BOARD_SIZE][BOARD_SIZE], int dif
     time_t t;
     srand((unsigned int) (&t));
     
+	while (counter == 0)
+	{
+		for (row = 0; row < BOARD_SIZE; row++) {
 
-    for (row = 0; row < BOARD_SIZE; row++) {
+			for(col = 0; col < BOARD_SIZE; col++) {
 
-        for(col = 0; col < BOARD_SIZE; col++) {
+				random_number = rand() % (RANDOM_RANGE + 1);
 
-            random_number = rand() % (RANDOM_RANGE + 1);
+				if (random_number < difficulty) {
 
-            if (random_number < difficulty) {
+					control_board[row][col] = MINE;
+					counter ++;
+				}
 
-                control_board[row][col] = MINE;
-                counter ++;
-            }
+				else {
 
-            else {
-
-                control_board[row][col] = NOT_MINE;
-            }
-        }
-    }
-
-    return counter;
+					control_board[row][col] = NOT_MINE;
+				}
+			}
+		}
+	}
+	
+	return counter;
 }
 
 void Initialize_Showed_Board(char showed_board[BOARD_SIZE][BOARD_SIZE]) {
