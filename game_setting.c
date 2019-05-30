@@ -31,35 +31,36 @@ int Select_Difficulty() {
 	int const SAME = 0;
 	int const NOT_SAME = 1;
 
-    char input[10];
+    char input[100];
     int difficulty;
     int compare_result = NOT_SAME;
 
 
     while (compare_result != SAME) {
-
+		input[0] = '\0';
         printf("\nEnter the difficulty (easy, normal, hard): ");
         scanf(" %s", input);
 
         compare_result = strcmp(input, "easy");
         difficulty = EASY;
 
-        if (compare_result != SAME) {
+        if (compare_result == SAME) 
+			return difficulty;
 
-            compare_result = strcmp(input, "normal");
-            difficulty = NORMAL;
+        compare_result = strcmp(input, "normal");
+        difficulty = NORMAL;
 
-            if (compare_result != SAME) {
+        if (compare_result == SAME) 
+			return difficulty;
 
-                compare_result = strcmp(input, "hard");
-                difficulty = HARD;
+        compare_result = strcmp(input, "hard");
+        difficulty = HARD;
 
-                if (compare_result != SAME) {
+        if (compare_result == SAME) 
+			return difficulty;
 
-                    printf("\nError with the input. Try again...\n");
-                }
-            }
-        }
+        printf("\nError with the input. Try again...\n");
+        
     } 
 
     return difficulty;
