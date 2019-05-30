@@ -40,6 +40,7 @@ int Select_Difficulty() {
 
         printf("\nEnter the difficulty (easy, normal, hard): ");
         scanf(" %s", input);
+		system("cls");
 
         compare_result = strcmp(input, "easy");
         difficulty = EASY;

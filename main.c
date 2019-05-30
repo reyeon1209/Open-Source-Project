@@ -3,9 +3,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
+#include <windows.h>
 #include "print.h"
 #include "game_setting.h"
-
 
 #define BOARD_SIZE 6
 #define TRUE 1
@@ -31,6 +31,7 @@ char IntToChar (int number);
 int IsMine(char control_board[BOARD_SIZE][BOARD_SIZE], int row, int col);
 int Get_Around_Mine_Number(char control_board[BOARD_SIZE][BOARD_SIZE], Point pos);
 int Get_Game_Status(char control_board[BOARD_SIZE][BOARD_SIZE], int game_status);
+void gotoXY(Point pos);
 
 
 int main() {
@@ -43,12 +44,17 @@ int main() {
 
     Display_Welcome_Message();
 
-    while (game_status == INIT || game_status == KEEP_ON) {
+	Sleep(1000);
+    
+	while (game_status == INIT || game_status == KEEP_ON) {
 		if (game_status == INIT) {
+			system("cls");
             Init_Game(control_board, showed_board);
+			Print_Board(showed_board);
+			printf("\n\nSelect a row: ");
+			printf("\nSelect a collumn: ");
         }
-
-		Print_Board(showed_board);
+		
 		
 		pos = Get_Board_Position();
 		game_status = Board_Update(control_board, showed_board, pos);
@@ -62,22 +68,46 @@ int main() {
 Point Get_Board_Position() {
 	
 	Point pos;
+	Point rpos, cpos, opos;
 	int isOverLimit = FALSE;
+	
+	const int INPUT_ROW_X = 14;
+	const int INPUT_ROW_Y = 13;
+	const int INPUT_COL_X = 18;
+	const int INPUT_COL_Y = 14;
+	const int OVER_MESSAGE_X = 0;
+	const int OVER_MESSAGE_Y = 17;
+
+	rpos.col = INPUT_ROW_X;
+	rpos.row = INPUT_ROW_Y;
+	cpos.col = INPUT_COL_X;
+	cpos.row = INPUT_COL_Y;
+	opos.col = OVER_MESSAGE_X;
+	opos.row = OVER_MESSAGE_Y;
 
     while (1) {
-        printf("\n\nSelect a row: ");
+		gotoXY(rpos);
         scanf(" %d", &pos.row);
-        printf("Select a collumn: ");
+		gotoXY(cpos);
         scanf(" %d", &pos.col);
+
+		gotoXY(rpos);
+		printf(" ");
+		gotoXY(cpos);
+		printf(" ");
+		gotoXY(opos);
 
         isOverLimit = IsOverLimit(pos.row, pos.col);
         if (isOverLimit) {
-            printf("\n\nValue too big. Should go from 0 to %d. Try again", BOARD_SIZE);
+            printf("Value too big. Should go from 0 to %d. Try again", BOARD_SIZE);
 			continue;
         }
 
-		else
+		else {
+			printf("r%d c%d is opened.                                   ",pos.row, pos.col);
+			
 			return pos;
+		}
     }
 
 	return pos;
@@ -93,8 +123,12 @@ int IsOverLimit(int row, int col) {
 int Board_Update(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOARD_SIZE][BOARD_SIZE], Point pos) {
    
     int mine_checker_feedback = Get_Around_Mine_Number(control_board, pos);
+	Point cursor;
 
     const char OPENED = 'x';
+	const int TOP_OF_BOARD = 5;
+	const int LEFT_OF_BOARD = 1;
+	const int NUM_BLANK = 3;
 
     if (mine_checker_feedback == LOSE) {
 
@@ -107,7 +141,13 @@ int Board_Update(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[B
         
         showed_board[pos.row][pos.col] = IntToChar(mine_checker_feedback);
 
-        return KEEP_ON;
+		cursor.col = pos.col * NUM_BLANK + LEFT_OF_BOARD;
+		cursor.row = pos.row + TOP_OF_BOARD;
+		
+		gotoXY(cursor);
+        printf("%c", showed_board[pos.row][pos.col]);
+		
+		return KEEP_ON;
     }
 }
 
@@ -180,11 +220,13 @@ int Get_Game_Status(char control_board[BOARD_SIZE][BOARD_SIZE], int game_status)
 	int next_status = KEEP_ON;
 
 	if (game_status == WIN) {
+		system("cls");
         printf("\n\nYou did it! You cleared the board. Congratulations!!!\n\n");
 		next_status = Input_Replay_Game(control_board);
 	}
 
 	else if (game_status == LOSE) {
+		system("cls");
 		printf("\n\nOh no! You hit a mine! ¯\\_(ツ)_/¯ \n\n");
 		next_status = Input_Replay_Game(control_board);
 	}
@@ -193,4 +235,13 @@ int Get_Game_Status(char control_board[BOARD_SIZE][BOARD_SIZE], int game_status)
 		return next_status;
 
 	return next_status;
+}
+
+void gotoXY(Point pos){
+   COORD cursor;
+
+   cursor.X = pos.col;
+   cursor.Y = pos.row;
+   
+   SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursor);
 }
