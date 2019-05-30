@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "game_setting.h"
+#include "print.h"
 
 
 void Init_Game(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOARD_SIZE][BOARD_SIZE]) {
@@ -15,6 +16,8 @@ void Init_Game(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOA
 	
 	int difficulty;
 	int number_of_bombs;
+
+	system("cls");
 
 	difficulty = Select_Difficulty();
 
@@ -40,6 +43,8 @@ int Select_Difficulty() {
 		input[0] = '\0';
         printf("\nEnter the difficulty (easy, normal, hard): ");
         scanf(" %s", input);
+
+		system("cls");
 
         compare_result = strcmp(input, "easy");
         difficulty = EASY;

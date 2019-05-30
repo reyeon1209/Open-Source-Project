@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
+#include <Windows.h>
 #include "print.h"
 #include "game_setting.h"
 
@@ -136,7 +137,7 @@ char IntToChar(int n) {
 
 	const int ASCII = 48;
 
-	return number + ASCII;
+	return n + ASCII;
 }
 
 int IsMine(char control_board[BOARD_SIZE][BOARD_SIZE], int row, int col) {
@@ -201,11 +202,15 @@ int Get_Game_Status(char control_board[BOARD_SIZE][BOARD_SIZE], int game_status)
 	int next_status = KEEP_ON;
 
 	if (game_status == WIN) {
+		system("cls");
+
         printf("\n\nYou did it! You cleared the board. Congratulations!!!\n\n");
 		next_status = Input_Replay_Game(control_board);
 	}
 
 	else if (game_status == LOSE) {
+		system("cls");
+
 		printf("\n\nOh no! You hit a mine! ¯\\_(ツ)_/¯ \n\n");
 		next_status = Input_Replay_Game(control_board);
 	}
