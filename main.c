@@ -45,8 +45,6 @@ int main() {
 
     Display_Welcome_Message();
 
-	Sleep(2000);
-
     while (game_status == INIT || game_status == KEEP_ON) {
 		if (game_status == INIT) {
             number_of_bombs = Init_Game(control_board, showed_board);

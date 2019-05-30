@@ -1,5 +1,6 @@
 
 #include <stdio.h>
+#include <Windows.h>
 #include "print.h"
 
 
@@ -16,6 +17,7 @@ void Display_Welcome_Message() {
 
     printf("Welcome to Minesweeper. Fork me at: https://github.com/apieceofCAKE/minesweeper_game\n");
 	printf("\n\nLoading...please wait");
+	Sleep(2000);
 }
 
 void Print_Board(char board[BOARD_SIZE][BOARD_SIZE]) {
