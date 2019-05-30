@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
+#include <Windows.h>
 #include "print.h"
 #include "game_setting.h"
 
@@ -39,15 +40,21 @@ int main() {
     char showed_board[BOARD_SIZE][BOARD_SIZE];
 
     int game_status = INIT;
+	int number_of_bombs = 0;
 	Point pos;
 
     Display_Welcome_Message();
 
+	Sleep(2000);
+
     while (game_status == INIT || game_status == KEEP_ON) {
 		if (game_status == INIT) {
-            Init_Game(control_board, showed_board);
+            number_of_bombs = Init_Game(control_board, showed_board);
         }
 
+		system("cls");
+
+		printf("\nThe board has %d bombs. Here we go again!\n", number_of_bombs);
 		Print_Board(showed_board);
 		
 		pos = Get_Board_Position();
@@ -180,11 +187,15 @@ int Get_Game_Status(char control_board[BOARD_SIZE][BOARD_SIZE], int game_status)
 	int next_status = KEEP_ON;
 
 	if (game_status == WIN) {
+		system("cls");
+
         printf("\n\nYou did it! You cleared the board. Congratulations!!!\n\n");
 		next_status = Input_Replay_Game(control_board);
 	}
 
 	else if (game_status == LOSE) {
+		system("cls");
+
 		printf("\n\nOh no! You hit a mine! ¯\\_(ツ)_/¯ \n\n");
 		next_status = Input_Replay_Game(control_board);
 	}
