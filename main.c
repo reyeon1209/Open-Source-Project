@@ -3,11 +3,11 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
+#include <ctype.h>
 #include "print.h"
 #include "game_setting.h"
 
 
-#define BOARD_SIZE 6
 #define TRUE 1
 #define FALSE 0
 // @brief 게임 상태를 나타내는 상수이다. 상수의 값에는 의미가 없다.
@@ -25,10 +25,10 @@ typedef struct Point {
 
 
 Point Get_Board_Position();
-int CheckInput(char row[100], char col[100]);
-int IsOverLimit(int row, int col);
+int Check_Input(char row[100], char col[100]);
+int Is_Over_Limit(int row, int col);
 int Board_Update(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOARD_SIZE][BOARD_SIZE], Point pos);
-char IntToChar(int n);
+char Int_To_Char(int n);
 int IsMine(char control_board[BOARD_SIZE][BOARD_SIZE], int row, int col);
 int Get_Around_Mine_Number(char control_board[BOARD_SIZE][BOARD_SIZE], Point pos);
 int Get_Game_Status(char control_board[BOARD_SIZE][BOARD_SIZE], int game_status);
@@ -61,54 +61,68 @@ int main() {
 
 
 Point Get_Board_Position() {
-	
+
 	Point pos;
 	int check_input = FALSE;
 	char row[100], col[100];
 
-    while (!check_input) {
-        printf("\nSelect a row: ");
-        scanf(" %s", &row);
+	while (!check_input) {
+			printf("\nSelect a row: ");
+			scanf(" %s", &row);
 
-        printf("\nSelect a collumn: ");
-        scanf(" %s", &col);		
+			printf("\nSelect a collumn: ");
+			scanf(" %s", &col);		
 
-		check_input = CheckInput(row, col);
-	}
+			check_input = Check_Input(row, col);
 
-	pos.row = atoi(row);	// int로 변환
+			if (!check_input)
+				printf("\nShould go from 0 to %d. Try again\n", BOARD_SIZE-1);
+		}
+
+	pos.row = atoi(row);
 	pos.col = atoi(col);
 
 	return pos;
 }
 
-int CheckInput(char row[100], char col[100]) {
+int Check_Input(char row[100], char col[100]) {
 	int num = BOARD_SIZE;
 	int len = 0;
+	int i;
 
-	while (num > 0)	// 보드판이 몇자리수인지
+	while (num > 0)
 	{
 		num = num/10;
 		len++;
 	}
 
-    if (strlen(row) >= len || strlen(col) >= len)	// 보드판크기보다 문자열길이가 길면 다시 입력
-	{
-		printf("\nShould go from 0 to %d. Try again\n", BOARD_SIZE-1);
+    if (strlen(row) > len || strlen(col) > len)
 		return FALSE;
+
+	for (i = 0; i < strlen(row); i++)
+	{
+		if (isalpha(row[i]))
+			return FALSE;
 	}
 
-	if (!IsOverLimit(atoi(row), atoi(col)))   // 게임판 크기 내에 있는지
+	
+	for (i = 0; i < strlen(col); i++)
+	{
+		if (isalpha(col[i]))
+			return FALSE;
+	}
+
+	if (!Is_Over_Limit(atoi(row), atoi(col)))
 		return TRUE;
 
 	return FALSE;
 }
 
-int IsOverLimit(int row, int col) {
+int Is_Over_Limit(int row, int col) {
 
-	if (row >= BOARD_SIZE)	return TRUE;
-	if (col >= BOARD_SIZE)	return TRUE;
-	else	return FALSE;
+   if (row >= BOARD_SIZE)   return TRUE;
+   if (col >= BOARD_SIZE)   return TRUE;
+   else   return FALSE;
 }
 
 int Board_Update(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOARD_SIZE][BOARD_SIZE], Point pos) {
@@ -126,17 +140,17 @@ int Board_Update(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[B
 
         control_board[pos.row][pos.col] = OPENED;
         
-        showed_board[pos.row][pos.col] = IntToChar(mine_checker_feedback);
+        showed_board[pos.row][pos.col] = Int_To_Char(mine_checker_feedback);
 
         return KEEP_ON;
     }
 }
 
-char IntToChar(int n) {
+char Int_To_Char(int n) {
 
 	const int ASCII = 48;
 
-	return number + ASCII;
+	return n + ASCII;
 }
 
 int IsMine(char control_board[BOARD_SIZE][BOARD_SIZE], int row, int col) {
