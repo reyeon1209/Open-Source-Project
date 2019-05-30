@@ -31,13 +31,13 @@ int Select_Difficulty() {
 	int const SAME = 0;
 	int const NOT_SAME = 1;
 
-    char input[10];
+    char input[100];
     int difficulty;
     int compare_result = NOT_SAME;
 
 
     while (compare_result != SAME) {
-
+		input[0] = '\0';
         printf("\nEnter the difficulty (easy, normal, hard): ");
         scanf(" %s", input);
 
