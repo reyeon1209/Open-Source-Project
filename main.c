@@ -25,9 +25,10 @@ typedef struct Point {
 
 
 Point Get_Board_Position();
+int CheckInput(char row[100], char col[100]);
 int IsOverLimit(int row, int col);
 int Board_Update(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOARD_SIZE][BOARD_SIZE], Point pos);
-char IntToChar (int number);
+char IntToChar(int n);
 int IsMine(char control_board[BOARD_SIZE][BOARD_SIZE], int row, int col);
 int Get_Around_Mine_Number(char control_board[BOARD_SIZE][BOARD_SIZE], Point pos);
 int Get_Game_Status(char control_board[BOARD_SIZE][BOARD_SIZE], int game_status);
@@ -62,25 +63,45 @@ int main() {
 Point Get_Board_Position() {
 	
 	Point pos;
-	int isOverLimit = FALSE;
+	int check_input = FALSE;
+	char row[100], col[100];
 
-    while (1) {
-        printf("\n\nSelect a row: ");
-        scanf(" %d", &pos.row);
-        printf("Select a collumn: ");
-        scanf(" %d", &pos.col);
+    while (!check_input) {
+        printf("\nSelect a row: ");
+        scanf(" %s", &row);
 
-        isOverLimit = IsOverLimit(pos.row, pos.col);
-        if (isOverLimit) {
-            printf("\n\nValue too big. Should go from 0 to %d. Try again", BOARD_SIZE-1);
-			continue;
-        }
+        printf("\nSelect a collumn: ");
+        scanf(" %s", &col);		
 
-		else
-			return pos;
-    }
+		check_input = CheckInput(row, col);
+	}
+
+	pos.row = atoi(row);	// int로 변환
+	pos.col = atoi(col);
 
 	return pos;
+}
+
+int CheckInput(char row[100], char col[100]) {
+	int num = BOARD_SIZE;
+	int len = 0;
+
+	while (num > 0)	// 보드판이 몇자리수인지
+	{
+		num = num/10;
+		len++;
+	}
+
+    if (strlen(row) >= len || strlen(col) >= len)	// 보드판크기보다 문자열길이가 길면 다시 입력
+	{
+		printf("\nShould go from 0 to %d. Try again\n", BOARD_SIZE-1);
+		return FALSE;
+	}
+
+	if (!IsOverLimit(atoi(row), atoi(col)))   // 게임판 크기 내에 있는지
+		return TRUE;
+
+	return FALSE;
 }
 
 int IsOverLimit(int row, int col) {
@@ -111,7 +132,7 @@ int Board_Update(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[B
     }
 }
 
-char IntToChar (int number) {
+char IntToChar(int n) {
 
 	const int ASCII = 48;
 
