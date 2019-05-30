@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <ctype.h>
+#include <Windows.h>
 #include "print.h"
 #include "game_setting.h"
 
@@ -18,11 +19,6 @@
 #define GAME_OVER (-50)
 
 
-typedef struct Point {
-	int row;
-	int col;
-}Point;
-
 
 Point Get_Board_Position();
 int Check_Input(char row[100], char col[100]);
@@ -32,7 +28,7 @@ char Int_To_Char(int n);
 int IsMine(char control_board[BOARD_SIZE][BOARD_SIZE], int row, int col);
 int Get_Around_Mine_Number(char control_board[BOARD_SIZE][BOARD_SIZE], Point pos);
 int Get_Game_Status(char control_board[BOARD_SIZE][BOARD_SIZE], int game_status);
-
+void Remove_Input(Point row_pos, Point col_pos, Point over_pos);
 
 int main() {
 
@@ -49,7 +45,6 @@ int main() {
             Init_Game(control_board, showed_board);
         }
 
-		Print_Board(showed_board);
 		
 		pos = Get_Board_Position();
 		game_status = Board_Update(control_board, showed_board, pos);
@@ -63,24 +58,42 @@ int main() {
 Point Get_Board_Position() {
 
 	Point pos;
+	Point row_pos, col_pos, over_pos;
+	
 	int check_input = FALSE;
 	char row[100], col[100];
 
+	const int INPUT_ROW_LEFT = 14;
+	const int INPUT_ROW_TOP = 12;
+	const int INPUT_COL_LEFT = 18;
+	const int INPUT_COL_TOP = 13;
+	const int OVER_MESSAGE_LEFT = 0;
+	const int OVER_MESSAGE_TOP = 16;
+
+	row_pos.col = INPUT_ROW_LEFT;
+	row_pos.row = INPUT_ROW_TOP;
+	col_pos.col = INPUT_COL_LEFT;
+	col_pos.row = INPUT_COL_TOP;
+	over_pos.col = OVER_MESSAGE_LEFT;
+	over_pos.row = OVER_MESSAGE_TOP;
+
 	while (!check_input) {
-			printf("\nSelect a row: ");
+			GoToXY(row_pos);
 			scanf(" %s", &row);
-
-			printf("\nSelect a column: ");
+			GoToXY(col_pos);
 			scanf(" %s", &col);		
-
+			
+			Remove_Input(row_pos,col_pos,over_pos);
 			check_input = Check_Input(row, col);
 
 			if (!check_input)
-				printf("\nShould go from 0 to %d. Try again\n", BOARD_SIZE-1);
+				printf("Should go from 0 to %d. Try again\n", BOARD_SIZE-1);
 		}
 
 	pos.row = atoi(row);
 	pos.col = atoi(col);
+
+	printf("(r%d,c%d) is opened.                                   ",pos.row, pos.col);
 
 	return pos;
 }
@@ -128,8 +141,12 @@ int Is_Over_Limit(int row, int col) {
 int Board_Update(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOARD_SIZE][BOARD_SIZE], Point pos) {
    
     int mine_checker_feedback = Get_Around_Mine_Number(control_board, pos);
+	Point cursor;
 
     const char OPENED = 'x';
+	const int TOP_OF_BOARD = 5;
+	const int LEFT_OF_BOARD = 1;
+	const int NUM_BLANK = 3;
 
     if (mine_checker_feedback == LOSE) {
 
@@ -141,6 +158,12 @@ int Board_Update(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[B
         control_board[pos.row][pos.col] = OPENED;
         
         showed_board[pos.row][pos.col] = Int_To_Char(mine_checker_feedback);
+
+		cursor.col = pos.col * NUM_BLANK + LEFT_OF_BOARD;
+		cursor.row = pos.row + TOP_OF_BOARD;
+
+		GoToXY(cursor);
+        printf("%c", showed_board[pos.row][pos.col]);
 
         return KEEP_ON;
     }
@@ -215,11 +238,15 @@ int Get_Game_Status(char control_board[BOARD_SIZE][BOARD_SIZE], int game_status)
 	int next_status = KEEP_ON;
 
 	if (game_status == WIN) {
+		system("cls");
+
         printf("\n\nYou did it! You cleared the board. Congratulations!!!\n\n");
 		next_status = Input_Replay_Game(control_board);
 	}
 
 	else if (game_status == LOSE) {
+		system("cls");
+
 		printf("\n\nOh no! You hit a mine! ¯\\_(ツ)_/¯ \n\n");
 		next_status = Input_Replay_Game(control_board);
 	}
@@ -228,4 +255,14 @@ int Get_Game_Status(char control_board[BOARD_SIZE][BOARD_SIZE], int game_status)
 		return next_status;
 
 	return next_status;
+}
+
+
+
+void Remove_Input(Point row_pos, Point col_pos, Point over_pos) {
+	GoToXY(row_pos);
+	printf("                    ");
+	GoToXY(col_pos);
+	printf("                    ");
+	GoToXY(over_pos);
 }

@@ -1,5 +1,6 @@
 
 #include <stdio.h>
+#include <Windows.h>
 #include "print.h"
 
 
@@ -15,6 +16,8 @@ void Display_Welcome_Message() {
            "                                              |_|              \n\n");
 
     printf("Welcome to Minesweeper. Fork me at: https://github.com/apieceofCAKE/minesweeper_game\n");
+	printf("\n\nLoading...please wait");
+	Sleep(2000);
 }
 
 void Print_Board(char board[BOARD_SIZE][BOARD_SIZE]) {
@@ -48,16 +51,32 @@ int Input_Replay_Game(char control_board[BOARD_SIZE][BOARD_SIZE]) {
 	 *			(INIT, GAMEOVER는 game_status가 가질 상수)
 	 */
 	
+	
+	char input = '\0';	
+	Point input_pos;
+	Point wrong_pos;
+	
 	const char YES = 'y';
 	const char NO = 'n';
-	char input = '\0';	
+	const int INPUT_LEFT = 33;
+	const int INPUT_TOP = 14;
+	const int WRONG_LEFT = 0;
+	const int WRONG_TOP = 17;
+	
+	input_pos.col = INPUT_LEFT;
+	input_pos.row =	INPUT_TOP;
+	wrong_pos.col = WRONG_LEFT;
+	wrong_pos.row = WRONG_TOP;
 
 	Print_Board(control_board);
 	
+	printf("\nDo you want to play again (y/n)? ");
+
 	while (input != YES && input != NO) {
-		printf("\nDo you want to play again (y/n)? ");
+		GoToXY(input_pos);
         scanf(" %c", &input);
-        printf("\n\n");
+
+		GoToXY(wrong_pos);
 
         if (input == YES) {
 
@@ -73,7 +92,19 @@ int Input_Replay_Game(char control_board[BOARD_SIZE][BOARD_SIZE]) {
         else {
             printf("Wrong input. Try again...");
         }
+
+		GoToXY(input_pos);
+		printf("                    ");
 	}
 
 	return GAME_OVER;
+}
+
+void GoToXY(Point pos){
+   COORD cursor;
+
+   cursor.X = pos.col;
+   cursor.Y = pos.row;
+
+   SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursor);
 }
