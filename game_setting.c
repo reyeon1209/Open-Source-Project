@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -7,27 +6,34 @@
 #include "print.h"
 
 
-void Init_Game(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOARD_SIZE][BOARD_SIZE]) {
+int Init_Game(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOARD_SIZE][BOARD_SIZE]) {
 	/*
-	 * @brief	게임의 난이도, 폭탄 수, 게임판 등을 초기화 하는 함수
-	 * @param	control_board[][] : 사용자에게 보이지 않는 게임판
-	 *			showed_board[][] : 사용자에게 보이는 게임판
-	 */
-	
+	* @brief   게임의 난이도, 폭탄 수, 게임판 등을 초기화 하는 함수
+	* @param   control_board[][] : 사용자에게 보이지 않는 게임판
+	*         showed_board[][] : 사용자에게 보이는 게임판
+	*/
+
 	int difficulty;
-	int number_of_bombs;
 
 	system("cls");
 
 	difficulty = Select_Difficulty();
 
-    number_of_bombs = Initialize_Control_Board(control_board, difficulty);
-    printf("\nThe board has %d bombs. Here we go again!\n", number_of_bombs);
+	printf("\n\n");
 
+<<<<<<< HEAD
     Initialize_Showed_Board(showed_board);
 	Print_Board(showed_board);
     printf("\nSelect a row: ");
     printf("\nSelect a collumn: ");
+=======
+	Initialize_Showed_Board(showed_board);
+	Print_Board(showed_board);
+	printf("\nSelect a row: ");
+	printf("\nSelect a collumn: ");
+
+	return difficulty;
+>>>>>>> develop
 }
 
 int Select_Difficulty() {
@@ -37,55 +43,55 @@ int Select_Difficulty() {
 	int const SAME = 0;
 	int const NOT_SAME = 1;
 
-    char input[100];
-    int difficulty;
-    int compare_result = NOT_SAME;
+	char input[100];
+	int difficulty;
+	int compare_result = NOT_SAME;
 
 
-    while (compare_result != SAME) {
+	while (compare_result != SAME) {
 		input[0] = '\0';
-        printf("\nEnter the difficulty (easy, normal, hard): ");
-        scanf(" %s", input);
+		printf("\nEnter the difficulty (easy, normal, hard): ");
+		scanf(" %s", input);
 
 		system("cls");
 
-        compare_result = strcmp(input, "easy");
-        difficulty = EASY;
+		compare_result = strcmp(input, "easy");
+		difficulty = EASY;
 
-        if (compare_result == SAME) 
+		if (compare_result == SAME) 
 			return difficulty;
 
-        compare_result = strcmp(input, "normal");
-        difficulty = NORMAL;
+		compare_result = strcmp(input, "normal");
+		difficulty = NORMAL;
 
-        if (compare_result == SAME) 
+		if (compare_result == SAME) 
 			return difficulty;
 
-        compare_result = strcmp(input, "hard");
-        difficulty = HARD;
+		compare_result = strcmp(input, "hard");
+		difficulty = HARD;
 
-        if (compare_result == SAME) 
+		if (compare_result == SAME) 
 			return difficulty;
 
-        printf("\nError with the input. Try again...\n");
-        
-    } 
+		printf("\nError with the input. Try again...\n");
 
-    return difficulty;
+	} 
+
+	return difficulty;
 }
 
 int Initialize_Control_Board(char control_board[BOARD_SIZE][BOARD_SIZE], int difficulty) {
 
-    int counter = 0;
-    int random_number;
+	int counter = 0;
+	int random_number;
 	int row, col;
 
 	const char MINE = '*', NOT_MINE = 'o';
 	const int RANDOM_RANGE = 10;
-	
-    time_t t;
-    srand((unsigned int) (&t));
-    
+
+	time_t t;
+	srand((unsigned int) (&t));
+
 	while (counter == 0)
 	{
 		for (row = 0; row < BOARD_SIZE; row++) {
@@ -107,22 +113,28 @@ int Initialize_Control_Board(char control_board[BOARD_SIZE][BOARD_SIZE], int dif
 			}
 		}
 	}
-	
+
+
+	if(control_board[row][col] == MINE) {  
+		control_board[row][col] = NOT_MINE;
+		counter--;
+	}
+
 	return counter;
 }
 
 void Initialize_Showed_Board(char showed_board[BOARD_SIZE][BOARD_SIZE]) {
-    /*
-	 * @brief   showed_board[][]를 모두 'X'로 초기화 ('X'는 지뢰를 검사하기 전 상태)
-	 * @param   showed_board[][] : 사용자가 볼 수 있는 게임판
-	 */
+	/*
+	* @brief   showed_board[][]를 모두 'X'로 초기화 ('X'는 지뢰를 검사하기 전 상태)
+	* @param   showed_board[][] : 사용자가 볼 수 있는 게임판
+	*/
 
 	const char UNOPENED = 'X';
 	int row, col;
-	
-    for (row = 0; row < BOARD_SIZE; row++) {
-        for (col = 0; col < BOARD_SIZE; col++) {
-            showed_board[row][col] = UNOPENED;
-        }
-    }
+
+	for (row = 0; row < BOARD_SIZE; row++) {
+		for (col = 0; col < BOARD_SIZE; col++) {
+			showed_board[row][col] = UNOPENED;
+		}
+	}
 }

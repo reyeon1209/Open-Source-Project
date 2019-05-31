@@ -13,4 +13,8 @@ typedef struct Point {
 void Display_Welcome_Message();
 void Print_Board(char board[BOARD_SIZE][BOARD_SIZE]);
 int Input_Replay_Game(char control_board[BOARD_SIZE][BOARD_SIZE]);
+<<<<<<< HEAD
 void GoToXY(Point pos);
+=======
+void GoToXY(Point pos);
+>>>>>>> develop
