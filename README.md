@@ -30,7 +30,7 @@
 - Project development environment : Visual Studio 2017   
 - Project language : C language   
 - Project Source : [**apieceofCAKE**](https://github.com/apieceofCAKE/minesweeper_game)   
-- [**Other information**](https://github.com/reyeon1209/os_project/wiki)    
+- Click for [**more information**](https://github.com/reyeon1209/os_project/wiki)    
 
    
 ## Execution Screen
@@ -99,7 +99,7 @@ If you find all squares without mines, you win the game.
 - 프로젝트 개발 환경 : Visual Studio 2017   
 - 프로젝트 언어 : C 언어   
 - 프로젝트 출처 : [**apieceofCAKE**](https://github.com/apieceofCAKE/minesweeper_game)   
-- [**추가 **](https://github.com/reyeon1209/os_project/wiki)    
+- [**추가 정보**](https://github.com/reyeon1209/os_project/wiki)는 클릭하세요.    
 
 
 ## 실행 화면
