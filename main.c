@@ -1,14 +1,17 @@
+/*
+마스터 + 게임판 초기 폭탄 0으로 수정 ver
+*/
 
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
+#include <ctype.h>
 #include <Windows.h>
 #include "print.h"
 #include "game_setting.h"
 
 
-#define BOARD_SIZE 6
 #define TRUE 1
 #define FALSE 0
 // @brief 게임 상태를 나타내는 상수이다. 상수의 값에는 의미가 없다.
@@ -19,21 +22,16 @@
 #define GAME_OVER (-50)
 
 
-typedef struct Point {
-	int row;
-	int col;
-}Point;
-
 
 Point Get_Board_Position();
-int CheckInput(char row[100], char col[100]);
-int IsOverLimit(int row, int col);
+int Check_Input(char row[100], char col[100]);
+int Is_Over_Limit(int row, int col);
 int Board_Update(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOARD_SIZE][BOARD_SIZE], Point pos);
-char IntToChar(int n);
+char Int_To_Char(int n);
 int IsMine(char control_board[BOARD_SIZE][BOARD_SIZE], int row, int col);
 int Get_Around_Mine_Number(char control_board[BOARD_SIZE][BOARD_SIZE], Point pos);
 int Get_Game_Status(char control_board[BOARD_SIZE][BOARD_SIZE], int game_status);
-void GoToXY(Point pos);
+void Remove_Input(Point row_pos, Point col_pos, Point over_pos);
 
 int main() {
 
@@ -41,20 +39,33 @@ int main() {
     char showed_board[BOARD_SIZE][BOARD_SIZE];
 
     int game_status = INIT;
-	Point pos;
+	int number_of_bombs;
+	int difficulty;
+	Point pos, opos;
+
+	const int OVER_MESSAGE_X = 0;
+	const int OVER_MESSAGE_Y = 18;
+	
 
     Display_Welcome_Message();
 
     while (game_status == INIT || game_status == KEEP_ON) {
 		if (game_status == INIT) {
-            Init_Game(control_board, showed_board);
+            difficulty = Init_Game(control_board, showed_board);
         }
 
-		Print_Board(showed_board);
 		
 		pos = Get_Board_Position();
 		game_status = Board_Update(control_board, showed_board, pos);
 		game_status = Get_Game_Status(control_board, game_status);
+
+		number_of_bombs = Initialize_Control_Board(control_board, difficulty);
+
+		opos.col = OVER_MESSAGE_X;
+		opos.row = OVER_MESSAGE_Y;
+	
+		GoToXY(opos);
+		printf("\nThe board has %d bombs. Here we go again!\n", number_of_bombs);
     }
 
     return 0;
@@ -62,38 +73,42 @@ int main() {
 
 
 Point Get_Board_Position() {
-	
+
 	Point pos;
 	Point row_pos, col_pos, over_pos;
 	
 	int check_input = FALSE;
 	char row[100], col[100];
 
-	const int INPUT_ROW_X = 14;
-	const int INPUT_ROW_Y = 13;
-	const int INPUT_COL_X = 18;
-	const int INPUT_COL_Y = 14;
-	const int OVER_MESSAGE_X = 0;
-	const int OVER_MESSAGE_Y = 17;
+	const int INPUT_ROW_LEFT = 14;
+	const int INPUT_ROW_TOP = 12;
+	const int INPUT_COL_LEFT = 18;
+	const int INPUT_COL_TOP = 13;
+	const int OVER_MESSAGE_LEFT = 0;
+	const int OVER_MESSAGE_TOP = 16;
 
-	row_pos.col = INPUT_ROW_X;
-	row_pos.row = INPUT_ROW_Y;
-	col_pos.col = INPUT_COL_X;
-	col_pos.row = INPUT_COL_Y;
-	over_pos.col = OVER_MESSAGE_X;
-	over_pos.row = OVER_MESSAGE_Y;
+	row_pos.col = INPUT_ROW_LEFT;
+	row_pos.row = INPUT_ROW_TOP;
+	col_pos.col = INPUT_COL_LEFT;
+	col_pos.row = INPUT_COL_TOP;
+	over_pos.col = OVER_MESSAGE_LEFT;
+	over_pos.row = OVER_MESSAGE_TOP;
 
-    while (!check_input) {
-        scanf(" %s", &row);
+	while (!check_input) {
+		row[0] = '\0', col[0] = '\0';
+			GoToXY(row_pos);
+			scanf(" %s", &row);
+			GoToXY(col_pos);
+			scanf(" %s", &col);		
+			
+			Remove_Input(row_pos,col_pos,over_pos);
+			check_input = Check_Input(row, col);
 
-        scanf(" %s", &col);		
+			if (!check_input)
+				printf("Should go from 0 to %d. Try again\n", BOARD_SIZE-1);
+		}
 
-		Remove_Input(row_pos,col_pos,over_pos);
-
-		check_input = CheckInput(row, col);
-	}
-
-	pos.row = atoi(row);	// int로 변환
+	pos.row = atoi(row);
 	pos.col = atoi(col);
 
 	printf("(r%d,c%d) is opened.                                   ",pos.row, pos.col);
@@ -101,33 +116,43 @@ Point Get_Board_Position() {
 	return pos;
 }
 
-int CheckInput(char row[100], char col[100]) {
+int Check_Input(char row[100], char col[100]) {
 	int num = BOARD_SIZE;
 	int len = 0;
+	int i;
 
-	while (num > 0)	// 보드판이 몇자리수인지
+	while (num > 0)
 	{
 		num = num/10;
 		len++;
 	}
 
-    if (strlen(row) >= len || strlen(col) >= len)	// 보드판크기보다 문자열길이가 길면 다시 입력
-	{
-		printf("Should go from 0 to %d. Try again\n", BOARD_SIZE-1);
+    if (strlen(row) > len || strlen(col) > len)
 		return FALSE;
+
+	for (i = 0; i < strlen(row); i++)
+	{
+		if (isdigit(row[i]));
+		else return FALSE;
 	}
 
-	if (!IsOverLimit(atoi(row), atoi(col)))   // 게임판 크기 내에 있는지
+	for (i = 0; i < strlen(col); i++)
+	{
+		if (isdigit(col[i]));
+		else return FALSE;
+	}
+
+	if (!Is_Over_Limit(atoi(row), atoi(col)))
 		return TRUE;
 
 	return FALSE;
 }
 
-int IsOverLimit(int row, int col) {
+int Is_Over_Limit(int row, int col) {
 
-	if (row >= BOARD_SIZE)	return TRUE;
-	if (col >= BOARD_SIZE)	return TRUE;
-	else	return FALSE;
+   if (row >= BOARD_SIZE)   return TRUE;
+   if (col >= BOARD_SIZE)   return TRUE;
+   else   return FALSE;
 }
 
 int Board_Update(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOARD_SIZE][BOARD_SIZE], Point pos) {
@@ -149,7 +174,7 @@ int Board_Update(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[B
 
         control_board[pos.row][pos.col] = OPENED;
         
-        showed_board[pos.row][pos.col] = IntToChar(mine_checker_feedback);
+        showed_board[pos.row][pos.col] = Int_To_Char(mine_checker_feedback);
 
 		cursor.col = pos.col * NUM_BLANK + LEFT_OF_BOARD;
 		cursor.row = pos.row + TOP_OF_BOARD;
@@ -161,7 +186,7 @@ int Board_Update(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[B
     }
 }
 
-char IntToChar(int n) {
+char Int_To_Char(int n) {
 
 	const int ASCII = 48;
 
@@ -249,19 +274,12 @@ int Get_Game_Status(char control_board[BOARD_SIZE][BOARD_SIZE], int game_status)
 	return next_status;
 }
 
-void GoToXY(Point pos){
-   COORD cursor;
 
-   cursor.X = pos.col;
-   cursor.Y = pos.row;
-
-   SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursor);
-}
 
 void Remove_Input(Point row_pos, Point col_pos, Point over_pos) {
 	GoToXY(row_pos);
-	printf("\t\t\t\t\t ");
+	printf("                    ");
 	GoToXY(col_pos);
-	printf("\t\t\t\t\t ");
+	printf("                    ");
 	GoToXY(over_pos);
 }

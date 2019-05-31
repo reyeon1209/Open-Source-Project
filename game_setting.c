@@ -7,7 +7,7 @@
 #include "print.h"
 
 
-void Init_Game(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOARD_SIZE][BOARD_SIZE]) {
+int Init_Game(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOARD_SIZE][BOARD_SIZE]) {
 	/*
 	 * @brief	게임의 난이도, 폭탄 수, 게임판 등을 초기화 하는 함수
 	 * @param	control_board[][] : 사용자에게 보이지 않는 게임판
@@ -15,18 +15,19 @@ void Init_Game(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOA
 	 */
 	
 	int difficulty;
-	int number_of_bombs;
 
 	system("cls");
 
 	difficulty = Select_Difficulty();
 
-    number_of_bombs = Initialize_Control_Board(control_board, difficulty);
-    printf("\nThe board has %d bombs. Here we go again!\n", number_of_bombs);
+	printf("\n\n");
 
     Initialize_Showed_Board(showed_board);
+	Print_Board(showed_board);
     printf("\nSelect a row: ");
     printf("\nSelect a collumn: ");
+
+	return difficulty;
 }
 
 int Select_Difficulty() {
