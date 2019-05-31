@@ -51,32 +51,16 @@ int Input_Replay_Game(char control_board[BOARD_SIZE][BOARD_SIZE]) {
 	 *			(INIT, GAMEOVER는 game_status가 가질 상수)
 	 */
 	
-	
-	char input = '\0';	
-	Point input_pos;
-	Point wrong_pos;
-	
 	const char YES = 'y';
 	const char NO = 'n';
-	const int INPUT_LEFT = 33;
-	const int INPUT_TOP = 14;
-	const int WRONG_LEFT = 0;
-	const int WRONG_TOP = 17;
-	
-	input_pos.col = INPUT_LEFT;
-	input_pos.row =	INPUT_TOP;
-	wrong_pos.col = WRONG_LEFT;
-	wrong_pos.row = WRONG_TOP;
+	char input = '\0';	
 
 	Print_Board(control_board);
 	
-	printf("\nDo you want to play again (y/n)? ");
-
 	while (input != YES && input != NO) {
-		GoToXY(input_pos);
+		printf("\nDo you want to play again (y/n)? ");
         scanf(" %c", &input);
-
-		GoToXY(wrong_pos);
+        printf("\n\n");
 
         if (input == YES) {
 
@@ -92,19 +76,7 @@ int Input_Replay_Game(char control_board[BOARD_SIZE][BOARD_SIZE]) {
         else {
             printf("Wrong input. Try again...");
         }
-
-		GoToXY(input_pos);
-		printf("                    ");
 	}
 
 	return GAME_OVER;
-}
-
-void GoToXY(Point pos){
-   COORD cursor;
-
-   cursor.X = pos.col;
-   cursor.Y = pos.row;
-
-   SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursor);
 }
