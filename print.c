@@ -73,10 +73,10 @@ int Input_Replay_Game(char control_board[BOARD_SIZE][BOARD_SIZE]) {
 	printf("\nDo you want to play again (y/n)? ");
 
 	while (input != YES && input != NO) {
-		GoToXY(input_pos);
+		Go_To_XY(input_pos);
 		scanf(" %c", &input);
 
-		GoToXY(wrong_pos);
+		Go_To_XY(wrong_pos);
 
 		if (input == YES) {
 
@@ -93,7 +93,7 @@ int Input_Replay_Game(char control_board[BOARD_SIZE][BOARD_SIZE]) {
 			printf("Wrong input. Try again...");
 		}
 
-		GoToXY(input_pos);
+		Go_To_XY(input_pos);
 		printf("                    ");
 	}
 
