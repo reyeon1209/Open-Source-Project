@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
+#include <time.h>
 #include "game_setting.h"
 #include "print.h"
 
@@ -80,7 +81,7 @@ int Select_Difficulty() {
 	return difficulty;
 }
 
-int Initialize_Control_Board(char control_board[BOARD_SIZE][BOARD_SIZE], int difficulty) {
+int Initialize_Control_Board(char control_board[BOARD_SIZE][BOARD_SIZE], int difficulty, Point pos) {
 
 	int counter = 0;
 	int random_number;
@@ -89,8 +90,7 @@ int Initialize_Control_Board(char control_board[BOARD_SIZE][BOARD_SIZE], int dif
 	const char MINE = '*', NOT_MINE = 'o';
 	const int RANDOM_RANGE = 10;
 
-	time_t t;
-	srand((unsigned int) (&t));
+	srand(time(NULL));
 
 	while (counter == 0)
 	{
@@ -115,8 +115,8 @@ int Initialize_Control_Board(char control_board[BOARD_SIZE][BOARD_SIZE], int dif
 	}
 
 
-	if(control_board[row][col] == MINE) {  
-		control_board[row][col] = NOT_MINE;
+	if(control_board[pos.row][pos.col] == MINE) {  
+		control_board[pos.row][pos.col] = NOT_MINE;
 		counter--;
 	}
 
