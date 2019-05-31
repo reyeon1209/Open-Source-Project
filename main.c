@@ -17,6 +17,8 @@
 #define KEEP_ON (-40)
 #define GAME_OVER (-50)
 
+static int cnt_opened = 0;
+
 
 Point Get_Board_Position();
 int Check_Input(char row[100], char col[100]);
@@ -27,6 +29,8 @@ int Is_Mine(char control_board[BOARD_SIZE][BOARD_SIZE], int row, int col);
 int Get_Around_Mine_Number(char control_board[BOARD_SIZE][BOARD_SIZE], Point pos);
 int Get_Game_Status(char control_board[BOARD_SIZE][BOARD_SIZE], int game_status);
 void Remove_Input(Point row_pos, Point col_pos, Point over_pos);
+void Reveal_Around(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOARD_SIZE][BOARD_SIZE], Point pos);
+int Set_Game_Status(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOARD_SIZE][BOARD_SIZE], Point pos);
 
 
 int main() {
@@ -156,18 +160,103 @@ int Is_Over_Limit(int row, int col) {
 	else   return FALSE;
 }
 
-int Update_Board(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOARD_SIZE][BOARD_SIZE], Point pos, int number_of_bombs) {
+
+
+int Set_Game_Status(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOARD_SIZE][BOARD_SIZE], Point pos)
+{
+	/*
+	* @brief 게임의 진행 상태 설정
+	* @return 사용자가 선택한 위치에 폭탄이 있으면 LOOSE 반환 그렇지 않으면 KEEP_ON 반환
+ 	*/
 
 	int mine_checker_feedback = Get_Around_Mine_Number(control_board, pos);
-	Point cursor;
 
+	if (mine_checker_feedback == LOSE) {
+        return LOSE;
+    }
+	else {
+		//Reveal_Around(control_board, showed_board, pos);
+		return KEEP_ON;
+	}
+}
+
+void Reveal_Around(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOARD_SIZE][BOARD_SIZE], Point pos)
+{
+	/*
+	* @brief 사용자가 선택한 칸 주변 폭탄이 0개라면 사용자 편의를 위해 주변의 폭탄이 0개인 칸 자동 오픈, 재귀 사용 
+ 	*/
+	const int NO_BOMBS = 0;
 	const char OPENED = 'x';
 	const int TOP_OF_BOARD = 5;
 	const int LEFT_OF_BOARD = 1;
 	const int NUM_BLANK = 3;
 
-	static int cnt_opened = 0;
+	int mine_checker_feedback;
+	Point aroundPos;
+	Point cursor;
 
+	//보드사이즈 넘어가는것 예외처리
+	if(pos.col < 0 || pos.row < 0 ) return;
+	if(pos.col > BOARD_SIZE-1 || pos.row > BOARD_SIZE-1) return;
+	
+	mine_checker_feedback = Get_Around_Mine_Number(control_board, pos);
+
+	// 해당 칸 주변에 폭탄이 없고 해당 칸이 열리지 않았을 때
+	if( mine_checker_feedback == NO_BOMBS && control_board[pos.row][pos.col] != OPENED){
+		if(control_board[pos.row][pos.col] != OPENED) {
+			cnt_opened++;
+		}
+
+		control_board[pos.row][pos.col] = OPENED;
+        showed_board[pos.row][pos.col] = Int_To_Char(mine_checker_feedback);
+		
+		cursor.col = pos.col * NUM_BLANK + LEFT_OF_BOARD;
+		cursor.row = pos.row + TOP_OF_BOARD;
+
+		Go_To_XY(cursor);
+		printf("%c", showed_board[pos.row][pos.col]);
+		
+		//상하좌우칸 Reveal_Around 재귀
+		aroundPos.col = pos.col-1;
+		aroundPos.row = pos.row;
+		Reveal_Around(control_board, showed_board, aroundPos);
+		aroundPos.col = pos.col;
+		aroundPos.row = pos.row-1;
+		Reveal_Around(control_board, showed_board, aroundPos);
+		aroundPos.col = pos.col+1;
+		aroundPos.row = pos.row;
+		Reveal_Around(control_board, showed_board, aroundPos);
+		aroundPos.col = pos.col;
+		aroundPos.row = pos.row+1;
+		Reveal_Around(control_board, showed_board, aroundPos);
+		return;
+	}
+	else{
+		if(control_board[pos.row][pos.col] != OPENED) {
+			cnt_opened++;
+		}
+
+		control_board[pos.row][pos.col] = OPENED;
+        showed_board[pos.row][pos.col] = Int_To_Char(mine_checker_feedback);
+		
+
+		cursor.col = pos.col * NUM_BLANK + LEFT_OF_BOARD;
+		cursor.row = pos.row + TOP_OF_BOARD;
+
+		Go_To_XY(cursor);
+		printf("%c", showed_board[pos.row][pos.col]);
+		
+	}
+
+}
+
+
+
+
+int Update_Board(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOARD_SIZE][BOARD_SIZE], Point pos, int number_of_bombs) {
+
+	int mine_checker_feedback = Get_Around_Mine_Number(control_board, pos);
+	
 	if (mine_checker_feedback == LOSE) {
 		cnt_opened = 0;
 		
@@ -176,27 +265,16 @@ int Update_Board(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[B
 
 	else {
 
-		if(control_board[pos.row][pos.col] != OPENED) {
-			cnt_opened++;
-		}
-
-		control_board[pos.row][pos.col] = OPENED;
-		showed_board[pos.row][pos.col] = Int_To_Char(mine_checker_feedback);
-
-		cursor.col = pos.col * NUM_BLANK + LEFT_OF_BOARD;
-		cursor.row = pos.row + TOP_OF_BOARD;
-
-		Go_To_XY(cursor);
-		printf("%c", showed_board[pos.row][pos.col]);
+		Reveal_Around(control_board, showed_board, pos);
 
 		if(cnt_opened >= BOARD_SIZE * BOARD_SIZE - number_of_bombs) {
 			cnt_opened = 0;
-
 			return WIN;
 		}
 		else {
 			return KEEP_ON;
 		}
+
 	}
 }
 
