@@ -22,19 +22,12 @@ int Init_Game(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOAR
 
 	printf("\n\n");
 
-<<<<<<< HEAD
-    Initialize_Showed_Board(showed_board);
-	Print_Board(showed_board);
-    printf("\nSelect a row: ");
-    printf("\nSelect a collumn: ");
-=======
 	Initialize_Showed_Board(showed_board);
 	Print_Board(showed_board);
 	printf("\nSelect a row: ");
 	printf("\nSelect a collumn: ");
 
 	return difficulty;
->>>>>>> develop
 }
 
 int Select_Difficulty() {

@@ -51,16 +51,17 @@ int main() {
 		if (game_status == INIT) {
 			difficulty = Init_Game(control_board, showed_board);
 		}
+		
+		pos = Get_Board_Position();
 
 		if (game_status == INIT) {
-			number_of_bombs = Initialize_Control_Board(control_board, difficulty);
+			number_of_bombs = Initialize_Control_Board(control_board, difficulty, pos);
 			game_status = KEEP_ON;
 		}
 
 		Go_To_XY(opos);
 		printf("\nThe board has %d bombs. Here we go again!\n", number_of_bombs);
 
-		pos = Get_Board_Position();
 		game_status = Update_Board(control_board, showed_board, pos, number_of_bombs);
 		game_status = Get_Game_Status(control_board, game_status);
 
