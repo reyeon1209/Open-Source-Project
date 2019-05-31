@@ -21,7 +21,7 @@
 Point Get_Board_Position();
 int Check_Input(char row[100], char col[100]);
 int Is_Over_Limit(int row, int col);
-int Update_Board(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOARD_SIZE][BOARD_SIZE], Point pos);
+int Update_Board(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOARD_SIZE][BOARD_SIZE], Point pos, int number_of_bombs);
 char Int_To_Char(int n);
 int Is_Mine(char control_board[BOARD_SIZE][BOARD_SIZE], int row, int col);
 int Get_Around_Mine_Number(char control_board[BOARD_SIZE][BOARD_SIZE], Point pos);
@@ -42,6 +42,8 @@ int main() {
 	const int OVER_MESSAGE_X = 0;
 	const int OVER_MESSAGE_Y = 18;
 
+	opos.col = OVER_MESSAGE_X;
+	opos.row = OVER_MESSAGE_Y;
 
 	Display_Welcome_Message();
 
@@ -55,16 +57,13 @@ int main() {
 			game_status = KEEP_ON;
 		}
 
-		pos = Get_Board_Position();
-		game_status = Update_Board(control_board, showed_board, pos);
-		game_status = Get_Game_Status(control_board, game_status);
-
-		opos.col = OVER_MESSAGE_X;
-		opos.row = OVER_MESSAGE_Y;
-
 		Go_To_XY(opos);
 		printf("\nThe board has %d bombs. Here we go again!\n", number_of_bombs);
-	
+
+		pos = Get_Board_Position();
+		game_status = Update_Board(control_board, showed_board, pos, number_of_bombs);
+		game_status = Get_Game_Status(control_board, game_status);
+
 	}
 
 	return 0;
@@ -154,7 +153,7 @@ int Is_Over_Limit(int row, int col) {
 	else   return FALSE;
 }
 
-int Update_Board(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOARD_SIZE][BOARD_SIZE], Point pos) {
+int Update_Board(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOARD_SIZE][BOARD_SIZE], Point pos, int number_of_bombs) {
 
 	int mine_checker_feedback = Get_Around_Mine_Number(control_board, pos);
 	Point cursor;
@@ -164,15 +163,20 @@ int Update_Board(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[B
 	const int LEFT_OF_BOARD = 1;
 	const int NUM_BLANK = 3;
 
-	if (mine_checker_feedback == LOSE) {
+	static int cnt_opened = 0;
 
+	if (mine_checker_feedback == LOSE) {
+		cnt_opened = 0;
 		return LOSE;
 	}
 
 	else {
 
-		control_board[pos.row][pos.col] = OPENED;
+		if(control_board[pos.row][pos.col] != OPENED) {
+			cnt_opened++;
+		}
 
+		control_board[pos.row][pos.col] = OPENED;
 		showed_board[pos.row][pos.col] = Int_To_Char(mine_checker_feedback);
 
 		cursor.col = pos.col * NUM_BLANK + LEFT_OF_BOARD;
@@ -181,7 +185,14 @@ int Update_Board(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[B
 		Go_To_XY(cursor);
 		printf("%c", showed_board[pos.row][pos.col]);
 
+		if(cnt_opened >= BOARD_SIZE * BOARD_SIZE - number_of_bombs) {
+			cnt_opened = 0;
+
+			return WIN;
+		}
+		else {
 		return KEEP_ON;
+	}
 	}
 }
 
