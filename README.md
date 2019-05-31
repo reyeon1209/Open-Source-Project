@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://github.com/reyeon1209/oss_game/">
+  <a href="https://github.com/reyeon1209/os_project/">
     <img src="https://user-images.githubusercontent.com/46713032/58324676-7ff26e80-7e62-11e9-8278-63a8ea262ebb.png" alt="Minesweeper logo" width="72" height="72">
   </a>
 </p>
@@ -54,12 +54,12 @@ If you find all squares without mines, you win the game.
 
 ## Copyright and License
 
-[**GNU General Public License v3.0**](https://github.com/reyeon1209/oss_game/blob/master/LICENSE)
+[**GNU General Public License v3.0**](https://github.com/reyeon1209/os_project/blob/master/LICENSE)
 
 
 ## Bugs and Feature Requests
 
-[**Please do it here.**](https://github.com/reyeon1209/oss_game/issues)
+[**Please do it here.**](https://github.com/reyeon1209/os_project/issues)
    
    
 ## About the Contributor
@@ -121,12 +121,12 @@ If you find all squares without mines, you win the game.
 
 ## 저작권 및 라이선스
 
-[**GNU General Public License v3.0**](https://github.com/reyeon1209/oss_game/blob/master/LICENSE)
+[**GNU General Public License v3.0**](https://github.com/reyeon1209/os_project/blob/master/LICENSE)
 
 
 ## 버그 및 기능 요청
 
-[**여기에 해주세요**](https://github.com/reyeon1209/oss_game/issues)
+[**여기에 해주세요**](https://github.com/reyeon1209/os_project/issues)
 
 
 ## 기여자 정보
