@@ -99,7 +99,7 @@ If you find all squares without mines, you win the game.
 - 프로젝트 개발 환경 : Visual Studio 2017   
 - 프로젝트 언어 : C 언어   
 - 프로젝트 출처 : [**apieceofCAKE**](https://github.com/apieceofCAKE/minesweeper_game)   
-- [**그 외 **](https://github.com/reyeon1209/os_project/wiki)    
+- [**추가 **](https://github.com/reyeon1209/os_project/wiki)    
 
 
 ## 실행 화면
