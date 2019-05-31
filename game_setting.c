@@ -73,7 +73,7 @@ int Select_Difficulty() {
 	return difficulty;
 }
 
-int Initialize_Control_Board(char control_board[BOARD_SIZE][BOARD_SIZE], int difficulty) {
+int Initialize_Control_Board(char control_board[BOARD_SIZE][BOARD_SIZE], int difficulty, Point pos) {
 
 	int counter = 0;
 	int random_number;
@@ -108,8 +108,8 @@ int Initialize_Control_Board(char control_board[BOARD_SIZE][BOARD_SIZE], int dif
 	}
 
 
-	if(control_board[row][col] == MINE) {  
-		control_board[row][col] = NOT_MINE;
+	if(control_board[pos.row][pos.col] == MINE) {  
+		control_board[pos.row][pos.col] = NOT_MINE;
 		counter--;
 	}
 
