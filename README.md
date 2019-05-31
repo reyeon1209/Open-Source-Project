@@ -35,10 +35,11 @@
 ## Execution Screen
 Loading...
 
+
 ## How to run
 
-- [Download the latest release.](https://github.com/reyeon1209/open_source_project/archive/master.zip)
-- Clone the repo: `git clone https://github.com/reyeon1209/oss_game.git`
+- [Download the latest release.](https://github.com/reyeon1209/os_project/archive/master.zip)
+- Clone the repo: `git clone https://github.com/reyeon1209/os_project.git`
 
 
 ## How to play games
@@ -102,10 +103,11 @@ If you find all squares without mines, you win the game.
 ## 실행 화면
 로딩...
 
+
 ## 실행 방법
 
-- [Download the latest release.](https://github.com/reyeon1209/open_source_project/archive/master.zip)
-- Clone the repo: `git clone https://github.com/reyeon1209/oss_game.git`
+- [Download the latest release.](https://github.com/reyeon1209/os_project/archive/master.zip)
+- Clone the repo: `git clone https://github.com/reyeon1209/os_project.git`
 
 
 ## 게임 플레이 방법
