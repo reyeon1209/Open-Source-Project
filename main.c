@@ -62,7 +62,7 @@ int main() {
 		opos.col = OVER_MESSAGE_X;
 		opos.row = OVER_MESSAGE_Y;
 
-		GoToXY(opos);
+		Go_To_XY(opos);
 		printf("\nThe board has %d bombs. Here we go again!\n", number_of_bombs);
 	
 	}
@@ -94,9 +94,9 @@ Point Get_Board_Position() {
 
 	while (!check_input) {
 		row[0] = '\0', col[0] = '\0';
-		GoToXY(row_pos);
+		Go_To_XY(row_pos);
 		scanf(" %s", &row);
-		GoToXY(col_pos);
+		Go_To_XY(col_pos);
 		scanf(" %s", &col);      
 
 		Remove_Input(row_pos,col_pos,over_pos);
@@ -178,7 +178,7 @@ int Update_Board(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[B
 		cursor.col = pos.col * NUM_BLANK + LEFT_OF_BOARD;
 		cursor.row = pos.row + TOP_OF_BOARD;
 
-		GoToXY(cursor);
+		Go_To_XY(cursor);
 		printf("%c", showed_board[pos.row][pos.col]);
 
 		return KEEP_ON;
@@ -274,9 +274,9 @@ int Get_Game_Status(char control_board[BOARD_SIZE][BOARD_SIZE], int game_status)
 }
 
 void Remove_Input(Point row_pos, Point col_pos, Point over_pos) {
-	GoToXY(row_pos);
+	Go_To_XY(row_pos);
 	printf("                    ");
-	GoToXY(col_pos);
+	Go_To_XY(col_pos);
 	printf("                    ");
-	GoToXY(over_pos);
+	Go_To_XY(over_pos);
 }
