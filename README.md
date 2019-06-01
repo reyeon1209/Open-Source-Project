@@ -34,7 +34,7 @@
 
    
 ## Execution Screen
-Loading...
+![AC_ 20190601-220200](https://user-images.githubusercontent.com/46713032/58748861-3f759f00-84b9-11e9-8605-82714c7dada8.gif)
 
 
 ## How to run
@@ -103,7 +103,7 @@ If you find all squares without mines, you win the game.
 
 
 ## 실행 화면
-로딩...
+![AC_ 20190601-220200](https://user-images.githubusercontent.com/46713032/58748861-3f759f00-84b9-11e9-8605-82714c7dada8.gif)
 
 
 ## 실행 방법
