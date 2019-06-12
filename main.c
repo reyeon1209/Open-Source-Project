@@ -120,7 +120,7 @@ Point Get_Board_Position() {
 	return pos;
 }
 
-int Check_Input(char row[100], char col[100]) {
+int Check_Input(char row[], char col[]) {
 	int num = BOARD_SIZE;
 	int len = 0;
 	int i;
