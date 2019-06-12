@@ -21,7 +21,7 @@ static int cnt_opened = 0;
 
 
 Point Get_Board_Position();
-int Check_Input(char row[100], char col[100]);
+int Check_Input(char row[], char col[]);
 int Is_Over_Limit(int row, int col);
 int Update_Board(char control_board[BOARD_SIZE][BOARD_SIZE], char showed_board[BOARD_SIZE][BOARD_SIZE], Point pos, int number_of_bombs);
 char Int_To_Char(int n);
