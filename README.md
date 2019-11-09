@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://github.com/reyeon1209/os_project/">
+  <a href="https://github.com/reyeon1209/Open-Source-Project/">
     <img src="https://user-images.githubusercontent.com/46713032/58324676-7ff26e80-7e62-11e9-8278-63a8ea262ebb.png" alt="Minesweeper logo" width="72" height="72">
   </a>
 </p>
